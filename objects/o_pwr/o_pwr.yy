@@ -1,20 +1,17 @@
 {
   "$GMObject":"",
-  "%Name":"o_standard_shoot",
+  "%Name":"o_pwr",
   "eventList":[
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"o_standard_shoot",
+  "name":"o_pwr",
   "overriddenProperties":[],
   "parent":{
-    "name":"Attacks",
-    "path":"folders/Objects/Player/Attacks.yy",
+    "name":"Powers",
+    "path":"folders/Objects/Powers.yy",
   },
-  "parentObjectId":{
-    "name":"o_att",
-    "path":"objects/o_att/o_att.yy",
-  },
+  "parentObjectId":null,
   "persistent":false,
   "physicsAngularDamping":0.1,
   "physicsDensity":0.5,
@@ -32,10 +29,7 @@
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":{
-    "name":"s_standard_shoot",
-    "path":"sprites/s_standard_shoot/s_standard_shoot.yy",
-  },
+  "spriteId":null,
   "spriteMaskId":null,
   "visible":true,
 }

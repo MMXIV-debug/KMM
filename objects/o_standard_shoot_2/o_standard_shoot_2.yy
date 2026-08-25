@@ -1,7 +1,9 @@
 {
   "$GMObject":"",
   "%Name":"o_standard_shoot_2",
-  "eventList":[],
+  "eventList":[
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+  ],
   "managed":true,
   "name":"o_standard_shoot_2",
   "overriddenProperties":[],
@@ -30,7 +32,10 @@
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":null,
+  "spriteId":{
+    "name":"s_standard_shoot_2",
+    "path":"sprites/s_standard_shoot_2/s_standard_shoot_2.yy",
+  },
   "spriteMaskId":null,
   "visible":true,
 }
