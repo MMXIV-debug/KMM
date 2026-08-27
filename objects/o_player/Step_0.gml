@@ -81,6 +81,9 @@ if (keyboard_check_pressed(ord("J")) && canShoot)
         case "Standard":
             c_weapon_standard(powlvl);
             break;
+		case "Spread":
+            c_weapon_spread();
+            break;
     }
     attack_timer = attack_cooldown;
     canShoot = 0;
