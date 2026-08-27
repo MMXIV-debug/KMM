@@ -1,12 +1,9 @@
 {
   "$GMObject":"",
-  "%Name":"o_power_change",
-  "eventList":[
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":{"name":"o_player","path":"objects/o_player/o_player.yy",},"eventNum":0,"eventType":4,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
-  ],
+  "%Name":"o_power_homing",
+  "eventList":[],
   "managed":true,
-  "name":"o_power_change",
+  "name":"o_power_homing",
   "overriddenProperties":[],
   "parent":{
     "name":"Powers",
@@ -34,8 +31,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"s_power_change",
-    "path":"sprites/s_power_change/s_power_change.yy",
+    "name":"s_power_homing",
+    "path":"sprites/s_power_homing/s_power_homing.yy",
   },
   "spriteMaskId":null,
   "visible":true,

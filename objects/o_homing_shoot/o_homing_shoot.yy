@@ -1,20 +1,20 @@
 {
   "$GMObject":"",
-  "%Name":"o_power_change",
+  "%Name":"o_homing_shoot",
   "eventList":[
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":{"name":"o_player","path":"objects/o_player/o_player.yy",},"eventNum":0,"eventType":4,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"o_power_change",
+  "name":"o_homing_shoot",
   "overriddenProperties":[],
   "parent":{
-    "name":"Powers",
-    "path":"folders/Objects/Powers.yy",
+    "name":"Attacks",
+    "path":"folders/Objects/Player/Attacks.yy",
   },
   "parentObjectId":{
-    "name":"o_pwr",
-    "path":"objects/o_pwr/o_pwr.yy",
+    "name":"o_att",
+    "path":"objects/o_att/o_att.yy",
   },
   "persistent":false,
   "physicsAngularDamping":0.1,
@@ -34,8 +34,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"s_power_change",
-    "path":"sprites/s_power_change/s_power_change.yy",
+    "name":"s_standard_shoot",
+    "path":"sprites/s_standard_shoot/s_standard_shoot.yy",
   },
   "spriteMaskId":null,
   "visible":true,
