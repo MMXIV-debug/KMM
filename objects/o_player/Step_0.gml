@@ -53,15 +53,8 @@ else
 x += speed_x;
 y += speed_y;
 
-// 5. Límites ----------------------------
 
-var mitad_w = 65 / 2;
-var mitad_h = 65 / 2;
-x = clamp(x, mitad_w, room_width - mitad_w);
-y = clamp(y, room_height / 2 + mitad_h, room_height - mitad_h);
-
-
-// 6. Ataque con cooldown funcional ----------------------------
+// 5. Ataque con cooldown funcional ----------------------------
 
 if (attack_timer > 0)
 {

@@ -1,1 +1,1 @@
-y -= vSpeed;
+x += vSpeed;
