@@ -52,6 +52,8 @@
     {"id":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},
     {"id":{"name":"c_weapon_spread","path":"scripts/c_weapon_spread/c_weapon_spread.yy",},},
     {"id":{"name":"c_weapon_standard","path":"scripts/c_weapon_standard/c_weapon_standard.yy",},},
+    {"id":{"name":"s_clouds_1","path":"sprites/s_clouds_1/s_clouds_1.yy",},},
+    {"id":{"name":"s_flores_1","path":"sprites/s_flores_1/s_flores_1.yy",},},
     {"id":{"name":"s_fondo_1","path":"sprites/s_fondo_1/s_fondo_1.yy",},},
     {"id":{"name":"s_player_down","path":"sprites/s_player_down/s_player_down.yy",},},
     {"id":{"name":"s_player_up","path":"sprites/s_player_up/s_player_up.yy",},},
