@@ -1,12 +1,11 @@
 {
   "$GMObject":"",
-  "%Name":"o_homing_shoot",
+  "%Name":"o_standard_shot_2",
   "eventList":[
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"o_homing_shoot",
+  "name":"o_standard_shot_2",
   "overriddenProperties":[],
   "parent":{
     "name":"Attacks",
@@ -34,8 +33,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"s_standard_shoot",
-    "path":"sprites/s_standard_shoot/s_standard_shoot.yy",
+    "name":"s_standard_shot_2",
+    "path":"sprites/s_standard_shot_2/s_standard_shot_2.yy",
   },
   "spriteMaskId":null,
   "visible":true,

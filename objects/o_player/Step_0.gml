@@ -67,6 +67,7 @@ else
 }
 
 
+
 if (keyboard_check_pressed(ord("J")) && canShoot)
 {
     switch(weapon)

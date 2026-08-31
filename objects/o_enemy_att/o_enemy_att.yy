@@ -1,17 +1,17 @@
 {
   "$GMObject":"",
-  "%Name":"o_standard_shoot_3",
+  "%Name":"o_enemy_att",
   "eventList":[],
   "managed":true,
-  "name":"o_standard_shoot_3",
+  "name":"o_enemy_att",
   "overriddenProperties":[],
   "parent":{
-    "name":"Attacks",
-    "path":"folders/Objects/Player/Attacks.yy",
+    "name":"Enemies",
+    "path":"folders/Objects/Enemies.yy",
   },
   "parentObjectId":{
-    "name":"o_att",
-    "path":"objects/o_att/o_att.yy",
+    "name":"o_enemy",
+    "path":"objects/o_enemy/o_enemy.yy",
   },
   "persistent":false,
   "physicsAngularDamping":0.1,

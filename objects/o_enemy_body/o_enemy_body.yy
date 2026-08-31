@@ -1,19 +1,17 @@
 {
   "$GMObject":"",
-  "%Name":"o_standard_shoot_2",
-  "eventList":[
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
-  ],
+  "%Name":"o_enemy_body",
+  "eventList":[],
   "managed":true,
-  "name":"o_standard_shoot_2",
+  "name":"o_enemy_body",
   "overriddenProperties":[],
   "parent":{
-    "name":"Attacks",
-    "path":"folders/Objects/Player/Attacks.yy",
+    "name":"Enemies",
+    "path":"folders/Objects/Enemies.yy",
   },
   "parentObjectId":{
-    "name":"o_att",
-    "path":"objects/o_att/o_att.yy",
+    "name":"o_enemy",
+    "path":"objects/o_enemy/o_enemy.yy",
   },
   "persistent":false,
   "physicsAngularDamping":0.1,
@@ -32,10 +30,7 @@
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":{
-    "name":"s_standard_shoot_2",
-    "path":"sprites/s_standard_shoot_2/s_standard_shoot_2.yy",
-  },
+  "spriteId":null,
   "spriteMaskId":null,
   "visible":true,
 }

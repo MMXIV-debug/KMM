@@ -14,12 +14,7 @@ function c_weapon_spread()
             i / (cantidad - 1)
         );
 
-        var bala = instance_create_layer(
-            x,
-            y,
-            "att",
-            o_spread_shoot
-        );
+        var bala = instance_create_layer(x+30,y,"att", o_spread_shot);
 
         bala.direction = angulo;
         bala.speed = 8;
