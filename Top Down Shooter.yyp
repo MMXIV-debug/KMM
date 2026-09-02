@@ -62,7 +62,6 @@
     {"id":{"name":"s_enemy_2","path":"sprites/s_enemy_2/s_enemy_2.yy",},},
     {"id":{"name":"s_flores_1","path":"sprites/s_flores_1/s_flores_1.yy",},},
     {"id":{"name":"s_player_auto","path":"sprites/s_player_auto/s_player_auto.yy",},},
-    {"id":{"name":"s_player_down","path":"sprites/s_player_down/s_player_down.yy",},},
     {"id":{"name":"s_player_up","path":"sprites/s_player_up/s_player_up.yy",},},
     {"id":{"name":"s_power_change","path":"sprites/s_power_change/s_power_change.yy",},},
     {"id":{"name":"s_power_homing","path":"sprites/s_power_homing/s_power_homing.yy",},},
