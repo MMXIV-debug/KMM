@@ -1,7 +1,7 @@
 //Stats
 //Atributos
 hp = 20;
-vSpeed = 9;
+move_speed = 3;
 dmg = 10;
 
 //Extras
