@@ -1,1 +1,1 @@
-canShoot = 1;
+pcanShoot = 1;

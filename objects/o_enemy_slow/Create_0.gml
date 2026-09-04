@@ -16,6 +16,7 @@ reloadSpeed = 120;
 
 state = "enter";
 
+spawner_id = noone;
 
 // Posición objetivo
 target_x = room_width - 520;

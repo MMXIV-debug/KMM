@@ -7,12 +7,20 @@ speed_y = 0;
 var dir_x = keyboard_check(ord("D")) - keyboard_check(ord("A"));
 var dir_y = keyboard_check(ord("S")) - keyboard_check(ord("W"));
 
+if (room != RoomK && room != RoomS)
+{
+    if (dir_x > 0) facing = 1;
+    else if (dir_x < 0) facing = -1;
+}
+image_xscale = facing;
+
 if (dir_x != 0 || dir_y != 0)
 {
     var distancia = point_distance(0, 0, dir_x, dir_y);
     dir_x /= distancia;
     dir_y /= distancia;
 }
+
 
 
 // 3. Dash ----------------------------
@@ -53,6 +61,24 @@ else
 x += speed_x;
 y += speed_y;
 
+// 4.5 Limitar al player dentro de la pantalla ----------------------------
+
+if (bbox_left < 0)
+{
+    x -= bbox_left;
+}
+if (bbox_right > room_width)
+{
+    x -= (bbox_right - room_width);
+}
+if (bbox_top < 0)
+{
+    y -= bbox_top;
+}
+if (bbox_bottom > room_height)
+{
+    y -= (bbox_bottom - room_height);
+}
 
 // 5. Ataque con cooldown funcional ----------------------------
 
@@ -78,6 +104,9 @@ if (keyboard_check_pressed(ord("J")) && canShoot)
 		case "Spread":
             c_weapon_spread();
             break;
+		case "Slash":
+			c_weapon_slash();
+			break;
     }
     attack_timer = attack_cooldown;
     canShoot = 0;

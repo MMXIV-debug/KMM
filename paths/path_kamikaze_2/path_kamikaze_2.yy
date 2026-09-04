@@ -1,0 +1,27 @@
+{
+  "$GMPath":"",
+  "%Name":"path_kamikaze_2",
+  "closed":false,
+  "kind":1,
+  "name":"path_kamikaze_2",
+  "parent":{
+    "name":"Kamikaze",
+    "path":"folders/ExtraResources/Paths/Kamikaze.yy",
+  },
+  "points":[
+    {"speed":100.0,"x":1932.4998,"y":506.50073,},
+    {"speed":100.0,"x":1851.8462,"y":96.64319,},
+    {"speed":100.0,"x":1823.0226,"y":765.55707,},
+    {"speed":100.0,"x":1742.8383,"y":298.91382,},
+    {"speed":100.0,"x":451.16284,"y":340.6012,},
+    {"speed":100.0,"x":1921.9325,"y":411.8717,},
+    {"speed":100.0,"x":1628.1528,"y":220.24048,},
+    {"speed":100.0,"x":443.96252,"y":220.41681,},
+    {"speed":100.0,"x":667.4414,"y":380.05603,},
+    {"speed":100.0,"x":1222.5537,"y":446.17834,},
+    {"speed":100.0,"x":2056.9805,"y":475.52905,},
+  ],
+  "precision":4,
+  "resourceType":"GMPath",
+  "resourceVersion":"2.0",
+}
