@@ -8,8 +8,8 @@
   "name":"o_standard_shot_2",
   "overriddenProperties":[],
   "parent":{
-    "name":"K",
-    "path":"folders/Objects/Player/Attacks/K.yy",
+    "name":"standard",
+    "path":"folders/Objects/Player/Attacks/K/standard.yy",
   },
   "parentObjectId":{
     "name":"o_att",

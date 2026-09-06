@@ -9,8 +9,8 @@
   "name":"o_power_overdrive",
   "overriddenProperties":[],
   "parent":{
-    "name":"Powers",
-    "path":"folders/Objects/Powers.yy",
+    "name":"K",
+    "path":"folders/Objects/Powers/K.yy",
   },
   "parentObjectId":{
     "name":"o_pwr",

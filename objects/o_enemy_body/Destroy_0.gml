@@ -1,5 +1,5 @@
 /// @description avisar al manager que ya puede spawnear otro y agregar al contador
-if (instance_exists(spawner_id))
+if (variable_instance_exists(id, "spawner_id") && instance_exists(spawner_id))
 {
     spawner_id.enemy_alive = false;
 }

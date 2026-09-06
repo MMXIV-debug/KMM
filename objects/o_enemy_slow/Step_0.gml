@@ -27,7 +27,7 @@ switch (state)
             {
                 var obj = instance_create_layer(x, y, "att", o_enemy_shoot_hom);
                 obj.direction = point_direction(x,y,o_player.x,o_player.y);
-                obj.speed = 3;
+                obj.speed = 15;
             }
         }
 

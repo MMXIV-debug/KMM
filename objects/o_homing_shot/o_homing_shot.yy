@@ -9,8 +9,8 @@
   "name":"o_homing_shot",
   "overriddenProperties":[],
   "parent":{
-    "name":"K",
-    "path":"folders/Objects/Player/Attacks/K.yy",
+    "name":"homing",
+    "path":"folders/Objects/Player/Attacks/K/homing.yy",
   },
   "parentObjectId":{
     "name":"o_att",

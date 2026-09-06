@@ -1,0 +1,25 @@
+{
+  "$GMPath":"",
+  "%Name":"path_pow_2",
+  "closed":false,
+  "kind":1,
+  "name":"path_pow_2",
+  "parent":{
+    "name":"PowerUpE",
+    "path":"folders/ExtraResources/Paths/PowerUpE.yy",
+  },
+  "points":[
+    {"speed":100.0,"x":1929.8431,"y":480.02335,},
+    {"speed":100.0,"x":1861.2942,"y":601.8665,},
+    {"speed":100.0,"x":1776.0195,"y":474.41553,},
+    {"speed":100.0,"x":1692.7646,"y":330.04297,},
+    {"speed":100.0,"x":1580.0393,"y":525.72925,},
+    {"speed":100.0,"x":1492.7255,"y":619.6508,},
+    {"speed":100.0,"x":1325.2745,"y":360.21942,},
+    {"speed":100.0,"x":1580.1372,"y":354.94492,},
+    {"speed":100.0,"x":1955.7451,"y":348.6704,},
+  ],
+  "precision":4,
+  "resourceType":"GMPath",
+  "resourceVersion":"2.0",
+}

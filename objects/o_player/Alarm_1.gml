@@ -1,2 +1,13 @@
 /// @description se acaba el power-up
-weapon = "Standard";
+/*if (weapon == "Spread")
+{
+    if (pending_weapon != "")
+    {
+        weapon = pending_weapon;
+        pending_weapon = "";
+    }
+    else
+    {
+        weapon = "Standard";
+    }
+}
