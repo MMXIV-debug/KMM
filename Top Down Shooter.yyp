@@ -71,6 +71,7 @@
     {"id":{"name":"o_homing_shot_2","path":"objects/o_homing_shot_2/o_homing_shot_2.yy",},},
     {"id":{"name":"o_homing_shot_3","path":"objects/o_homing_shot_3/o_homing_shot_3.yy",},},
     {"id":{"name":"o_homing_shot","path":"objects/o_homing_shot/o_homing_shot.yy",},},
+    {"id":{"name":"o_menu_controller","path":"objects/o_menu_controller/o_menu_controller.yy",},},
     {"id":{"name":"o_player","path":"objects/o_player/o_player.yy",},},
     {"id":{"name":"o_portal","path":"objects/o_portal/o_portal.yy",},},
     {"id":{"name":"o_power_homing","path":"objects/o_power_homing/o_power_homing.yy",},},
@@ -89,6 +90,7 @@
     {"id":{"name":"path_kamikaze_3","path":"paths/path_kamikaze_3/path_kamikaze_3.yy",},},
     {"id":{"name":"path_pow_1","path":"paths/path_pow_1/path_pow_1.yy",},},
     {"id":{"name":"path_pow_2","path":"paths/path_pow_2/path_pow_2.yy",},},
+    {"id":{"name":"RoomIMenu","path":"rooms/RoomIMenu/RoomIMenu.yy",},},
     {"id":{"name":"RoomK","path":"rooms/RoomK/RoomK.yy",},},
     {"id":{"name":"RoomL","path":"rooms/RoomL/RoomL.yy",},},
     {"id":{"name":"RoomS","path":"rooms/RoomS/RoomS.yy",},},
@@ -124,6 +126,7 @@
   "resourceType":"GMProject",
   "resourceVersion":"2.0",
   "RoomOrderNodes":[
+    {"roomId":{"name":"RoomIMenu","path":"rooms/RoomIMenu/RoomIMenu.yy",},},
     {"roomId":{"name":"RoomK","path":"rooms/RoomK/RoomK.yy",},},
     {"roomId":{"name":"RoomL","path":"rooms/RoomL/RoomL.yy",},},
     {"roomId":{"name":"RoomS","path":"rooms/RoomS/RoomS.yy",},},
