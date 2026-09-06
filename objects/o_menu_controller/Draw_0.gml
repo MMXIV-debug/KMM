@@ -13,7 +13,10 @@ draw_rectangle(btn_start_x1, btn_start_y1, btn_start_x2, btn_start_y2, false);
 draw_set_color(c_white);
 draw_text((btn_start_x1 + btn_start_x2)/2, (btn_start_y1 + btn_start_y2)/2, "JUGAR");
 
-// Botón Quit
+/*
+	Botón Quit
+	solo cambiar las líneas de draw_text/draw_rectangle por draw_sprite/draw_sprite_stretched
+*/
 draw_set_color(c_gray);
 draw_rectangle(btn_quit_x1, btn_quit_y1, btn_quit_x2, btn_quit_y2, false);
 draw_set_color(c_white);
