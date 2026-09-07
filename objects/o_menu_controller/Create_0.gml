@@ -1,4 +1,4 @@
-title_text = "MI JUEGO";
+title_text = "Titulo PlaceHolder";
 
 btn_start_x1 = room_width/2 - 100;
 btn_start_y1 = room_height/2;

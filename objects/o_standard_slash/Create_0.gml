@@ -1,5 +1,6 @@
 dmg = 15;
 duration = 15; //calculado en steps
+destroy_timer = 5;
 alarm[0] = duration;
 
 facing = 1;

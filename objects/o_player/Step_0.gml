@@ -39,8 +39,6 @@ if (dir_x != 0 || dir_y != 0)
     dir_y /= distancia;
 }
 
-
-
 // 3. Dash ----------------------------
 
 if (dash_cooldown_timer > 0) dash_cooldown_timer--;
@@ -110,43 +108,87 @@ else
     canShoot = 1; 
 }
 
-
-
 if (keyboard_check_pressed(ord("J")) && canShoot)
 {
-    switch(weapon)
+    if (room == RoomL)
     {
-		//Armas de la RoomK
-        case "Standard":
-            c_weapon_standard(powlvl);
-            break;
-		case "Spread":
-		    c_weapon_spread(powlvl);
-		    overdrive_shots_left--;
+		switch (weapon_RoomL)
+		{
+			case "Slash":
+				c_weapon_slash();
+				break;
 
-		    if (overdrive_shots_left <= 0)
-		    {
-		        if (pending_weapon != "")
-		        {
-		            weapon = pending_weapon;
-		            pending_weapon = "";
-		        }
-		        else
-		        {
-		            weapon = "Standard";
-		        }
-		    }
-		    break;
-		case "Homing":
-			c_weapon_homing(powlvl);
-			break;
-		//Armas de la RoomL
-		case "Slash":
-			c_weapon_slash();
-			break;
-		//Armas de la RoomS
-		
+			case "Spin":
+				c_weapon_spin();
+				break;
+
+			case "Boomerang":
+				c_weapon_boomerang();
+				break;
+		}
+	attack_timer = attack_cooldown;
+	canShoot = 0;
     }
+	else if (room == RoomK)
+	{
+		switch(weapon)
+	    {
+			//Armas de la RoomK
+	        case "Standard":
+	            c_weapon_standard(powlvl);
+	            break;
+			case "Spread":
+			    c_weapon_spread(powlvl);
+			    overdrive_shots_left--;
+
+			    if (overdrive_shots_left <= 0)
+			    {
+			        if (pending_weapon != "")
+			        {
+			            weapon = pending_weapon;
+			            pending_weapon = "";
+			        }
+			        else
+			        {
+			            weapon = "Standard";
+			        }
+			    }
+			    break;
+			case "Homing":
+				c_weapon_homing(powlvl);
+				break;
+		
+	    }
+	}
     attack_timer = attack_cooldown;
     canShoot = 0;
+}
+
+// 6 Inventario de armas RoomL
+
+
+if (keyboard_check_pressed(ord("K")))
+{
+    total_weapons = array_length(weapon_slots);
+
+    if (total_weapons > 1)
+    {
+        current_weapon_index++;
+
+        if (current_weapon_index >= total_weapons)
+        {
+            current_weapon_index = 0;
+        }
+
+        weapon_RoomL = weapon_slots[current_weapon_index];
+
+        show_debug_message(
+            "Arma Room L actual: " + weapon_RoomL
+        );
+    }
+}
+
+if (invuln_timer > 0)
+{
+    show_debug_message("INVULNERABLE: " + string(invuln_timer));
 }

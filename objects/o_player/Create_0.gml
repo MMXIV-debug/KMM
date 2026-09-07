@@ -38,6 +38,7 @@ powMax = 3;
 overdrive_shots_left = 0;
 
 gpu_set_texfilter(false);
+
 weapon = "Standard";
 if (variable_global_exists("weapon_override"))
 {
@@ -52,4 +53,14 @@ is_dead = false;
 invuln_duration = 60;
 invuln_timer = 0;
 
+
 pending_weapon = "";
+pad_num = -1;
+
+// Extras de la Sala L
+
+weapon_slots = ["Slash"];
+current_weapon_index = 0;
+weapon_RoomL = "Slash";
+total_weapons = array_length(weapon_slots);
+

@@ -1,7 +1,7 @@
 // Se mantiene pegado adelante del player mientras dura el ataque
 if (instance_exists(o_player))
 {
-    x = o_player.x + (60 * facing);
+    x = o_player.x + (80 * facing);
     y = o_player.y;
 }
 // Golpea a todos los enemigos que toque, una sola vez cada uno
