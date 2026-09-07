@@ -12,8 +12,8 @@
   "name":"o_enemy_pow",
   "overriddenProperties":[],
   "parent":{
-    "name":"Enemies",
-    "path":"folders/Objects/Enemies.yy",
+    "name":"K",
+    "path":"folders/Objects/Enemies/K.yy",
   },
   "parentObjectId":{
     "name":"o_enemy_body",

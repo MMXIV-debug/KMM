@@ -2,8 +2,7 @@
 
 var rooms = [RoomL, RoomS];
 //var chosen_room = rooms[irandom(1)];
-var chosen_room = RoomL; // 🔧 TEMPORAL para testear
-
+var chosen_room = RoomL
 if (chosen_room == RoomL)
 {
     global.weapon_override = "Slash";
