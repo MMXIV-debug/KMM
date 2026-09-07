@@ -9,8 +9,8 @@
   "name":"o_spread_shot",
   "overriddenProperties":[],
   "parent":{
-    "name":"K",
-    "path":"folders/Objects/Player/Attacks/K.yy",
+    "name":"overdrive",
+    "path":"folders/Objects/Player/Attacks/K/overdrive.yy",
   },
   "parentObjectId":{
     "name":"o_att",

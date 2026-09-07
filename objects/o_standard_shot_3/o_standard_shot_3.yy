@@ -1,13 +1,15 @@
 {
   "$GMObject":"",
   "%Name":"o_standard_shot_3",
-  "eventList":[],
+  "eventList":[
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+  ],
   "managed":true,
   "name":"o_standard_shot_3",
   "overriddenProperties":[],
   "parent":{
-    "name":"K",
-    "path":"folders/Objects/Player/Attacks/K.yy",
+    "name":"standard",
+    "path":"folders/Objects/Player/Attacks/K/standard.yy",
   },
   "parentObjectId":{
     "name":"o_att",
@@ -30,7 +32,10 @@
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":null,
+  "spriteId":{
+    "name":"s_standard_shot_3",
+    "path":"sprites/s_standard_shot_3/s_standard_shot_3.yy",
+  },
   "spriteMaskId":null,
   "visible":true,
 }

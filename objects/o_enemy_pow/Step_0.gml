@@ -1,8 +1,6 @@
 // Inherit the parent event
 event_inherited();
 
-
-
 // Avanza el tiempo
 tiempo += velocidad;
 

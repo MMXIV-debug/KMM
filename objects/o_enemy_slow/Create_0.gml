@@ -33,3 +33,4 @@ alarm[1] = -1;
 
 // Extras
 gpu_set_texfilter(false);
+drop_chance = 5; // % de probabilidad de soltar el power-up

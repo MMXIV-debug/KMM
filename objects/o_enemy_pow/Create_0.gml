@@ -24,3 +24,9 @@ tiempo = 0;
 
 // Ángulo máximo de movimiento
 angulo_max = 15;
+
+// Extras
+var paths = [path_pow_1, path_pow_2];
+var chosen_path = paths[irandom(array_length(paths) - 1)];
+
+path_start(chosen_path, move_speed, path_action_stop, false);

@@ -1,8 +1,26 @@
+// 1. Deteccion de muerte y estado del player
+
+if (!is_dead && hp <= 0)
+{
+    is_dead = true;
+    speed_x = 0;
+    speed_y = 0;
+}
+
+if (is_dead)
+{
+    exit; // corta acá: no se mueve, no dashea, no ataca
+}
+
+if (invuln_timer > 0)
+{
+    invuln_timer--;
+}
+
+// 2. Movimiento (dirección) ----------------------------
 
 speed_x = 0;
 speed_y = 0;
-
-// 2. Movimiento (dirección) ----------------------------
 
 var dir_x = keyboard_check(ord("D")) - keyboard_check(ord("A"));
 var dir_y = keyboard_check(ord("S")) - keyboard_check(ord("W"));
@@ -98,15 +116,36 @@ if (keyboard_check_pressed(ord("J")) && canShoot)
 {
     switch(weapon)
     {
+		//Armas de la RoomK
         case "Standard":
             c_weapon_standard(powlvl);
             break;
 		case "Spread":
-            c_weapon_spread();
-            break;
+		    c_weapon_spread(powlvl);
+		    overdrive_shots_left--;
+
+		    if (overdrive_shots_left <= 0)
+		    {
+		        if (pending_weapon != "")
+		        {
+		            weapon = pending_weapon;
+		            pending_weapon = "";
+		        }
+		        else
+		        {
+		            weapon = "Standard";
+		        }
+		    }
+		    break;
+		case "Homing":
+			c_weapon_homing(powlvl);
+			break;
+		//Armas de la RoomL
 		case "Slash":
 			c_weapon_slash();
 			break;
+		//Armas de la RoomS
+		
     }
     attack_timer = attack_cooldown;
     canShoot = 0;

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"c_player_take_damage",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"c_player_take_damage",
+  "parent":{
+    "name":"Functions",
+    "path":"folders/Functions.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
