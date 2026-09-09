@@ -2,9 +2,9 @@
   "$GMSprite":"v2",
   "%Name":"cielo",
   "bboxMode":0,
-  "bbox_bottom":631,
+  "bbox_bottom":636,
   "bbox_left":0,
-  "bbox_right":1919,
+  "bbox_right":1937,
   "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -12,14 +12,14 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"v1","%Name":"9fce5cb1-cf54-42b5-8684-e0c4970c472d","name":"9fce5cb1-cf54-42b5-8684-e0c4970c472d","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"843b91eb-7c39-4008-a32f-cf19a7ea248a","name":"843b91eb-7c39-4008-a32f-cf19a7ea248a","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
-  "height":1070,
+  "height":1080,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"b3e93f81-8507-45c0-a105-cc217d937d8d","blendMode":0,"displayName":"default","isLocked":false,"name":"b3e93f81-8507-45c0-a105-cc217d937d8d","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"bdba33df-6ba1-4929-92f5-119a8d81c494","blendMode":0,"displayName":"default","isLocked":false,"name":"bdba33df-6ba1-4929-92f5-119a8d81c494","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"cielo",
   "nineSlice":null,
@@ -69,8 +69,8 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"9fce5cb1-cf54-42b5-8684-e0c4970c472d","path":"sprites/cielo/cielo.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"b24f85b1-2bcc-4d08-976e-5f21d71c022e","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"843b91eb-7c39-4008-a32f-cf19a7ea248a","path":"sprites/cielo/cielo.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"83f3a05f-46f5-4cad-bed3-b4c406dd4018","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":1920,
+  "width":1938,
 }

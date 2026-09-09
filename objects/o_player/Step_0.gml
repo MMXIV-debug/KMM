@@ -25,7 +25,8 @@ speed_y = 0;
 var dir_x = keyboard_check(ord("D")) - keyboard_check(ord("A"));
 var dir_y = keyboard_check(ord("S")) - keyboard_check(ord("W"));
 
-if (room != RoomK && room != RoomS)
+// Con esto se controla el facing
+if (room != RoomK && room != RoomS && room != RoomT)
 {
     if (dir_x > 0) facing = 1;
     else if (dir_x < 0) facing = -1;
@@ -129,7 +130,7 @@ if (keyboard_check_pressed(ord("J")) && canShoot)
 	attack_timer = attack_cooldown;
 	canShoot = 0;
     }
-	else if (room == RoomK)
+	else if (room == RoomK or room == RoomT)
 	{
 		switch(weapon)
 	    {
