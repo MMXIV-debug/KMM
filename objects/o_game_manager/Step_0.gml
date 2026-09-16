@@ -1,20 +1,31 @@
-// Chequeo del tiempo (una sola vez)
-if (!thirty_seconds_reached)
+// Solo activo en RoomK: contar el tiempo y spawnear el boss al minuto
+if (room == RoomK && !boss_spawned)
 {
     game_timer++;
-    if (game_timer >= 30 * room_speed)
+    if (game_timer >= boss_time)
     {
-        thirty_seconds_reached = true;
+        boss_spawned = true;
+        // Desactivar todos los spawners de enemigos comunes
+        with (o_enemy_manager)
+        {
+            instance_destroy();
+        }
+        
+        // Si el jugador tiene Homing, se lo quitamos y volvemos a Standard
+        if (instance_exists(o_player))
+        {
+            if (o_player.weapon == "Homing")
+            {
+                o_player.weapon = "Standard";
+                o_player.powlvl = 1;
+            }
+            if (o_player.pending_weapon == "Homing")
+            {
+                o_player.pending_weapon = "";
+            }
+        }
+
+        // Boss entra desde la derecha hacia la mitad de pantalla
+        instance_create_layer(room_width + 100, room_height / 2, "Instances", o_enemy_boss);
     }
-}
-
-// Chequeo repetido: cada 20 kills, una vez pasado el tiempo mínimo
-if (thirty_seconds_reached && global.kills_since_last_portal >= 20)
-{
-    var px = irandom_range(spawn_margin, room_width - spawn_margin);
-    var py = irandom_range(spawn_margin, room_height - spawn_margin);
-
-    instance_create_layer(px, py, "Instances", o_portal);
-
-    global.kills_since_last_portal = 0; // se reinicia para el próximo ciclo de 20
 }

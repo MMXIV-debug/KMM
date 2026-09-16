@@ -25,7 +25,7 @@ for (var i = 0; i < total_hearts; i++)
 }
 
 // Indicador de muerte y dibujo en pantalla ----------------------------
-if (is_dead)
+/*if (is_dead)
 {
     // Oscurecer pantalla
     draw_set_alpha(0.6);
@@ -58,10 +58,10 @@ if (is_dead)
 
         if (mx > btn_x1 && mx < btn_x2 && my > btn_y1 && my < btn_y2)
         {
-            game_restart();
+            room_goto(RoomIMenu);
         }
     }
 
     draw_set_halign(fa_left);
     draw_set_valign(fa_top);
-}
+}*/

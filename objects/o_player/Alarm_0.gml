@@ -1,1 +1,2 @@
-pcanShoot = 1;
+/// @description  reload
+canShoot = 1;

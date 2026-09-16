@@ -4,6 +4,7 @@ speed_x = 0;
 speed_y = 0;
 
 move_speed = 9;
+respawnTime = 1 * room_speed; 
 
 // Estado ---------------
 State = 0;
@@ -49,7 +50,9 @@ show_debug_message("Player creado con weapon: " + weapon);
 powerup_duration = 600; // 600 pasos = 10 segundos a 60 FPS
 facing = 1; //Lugar a donde esta viendo 1 = derecha, -1 = izquierda
 
+// Control
 is_dead = false;
+deaths = 0;
 invuln_duration = 60;
 invuln_timer = 0;
 
@@ -58,6 +61,12 @@ pending_weapon = "";
 pad_num = -1;
 
 // Extras de la Sala L
+
+
+if (room == RoomL)
+{
+    global.roomL_kills = 0; // Contador global de kills para desbloqueo de armas en la RoomL
+}
 
 weapon_slots = ["Slash"];
 current_weapon_index = 0;

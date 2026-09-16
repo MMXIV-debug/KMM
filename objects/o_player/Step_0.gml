@@ -3,6 +3,10 @@
 if (!is_dead && hp <= 0)
 {
     is_dead = true;
+	deaths += 1;
+	//instance_destroy(x,y, "Instances", o_death);
+	y-=2000;
+	alarm[1] = respawnTime;
     speed_x = 0;
     speed_y = 0;
 }
@@ -119,12 +123,8 @@ if (keyboard_check_pressed(ord("J")) && canShoot)
 				c_weapon_slash();
 				break;
 
-			case "Spin":
-				c_weapon_spin();
-				break;
-
-			case "Boomerang":
-				c_weapon_boomerang();
+			case "Hook":
+				c_weapon_hook();
 				break;
 		}
 	attack_timer = attack_cooldown;
@@ -193,3 +193,4 @@ if (invuln_timer > 0)
 {
     show_debug_message("INVULNERABLE: " + string(invuln_timer));
 }
+

@@ -1,28 +1,31 @@
 // Stats ---------------------------
-
 hpMax = 250;
 hp = hpMax;
+dmg = 20;
 
-dmg =20000000000000000000000000000000000000000000000;
-
-vSpeed = 1.5; //Velocidad a la que va a la derecha
-hSpeed = 4; //Velocidad que va hacia arriba y abajo
+vSpeed = 1.5; // Velocidad horizontal de entrada
+hSpeed = 4;   // Velocidad oscilacion vertical
 
 image_xscale = 3;
 image_yscale = 3;
 
-canShoot = 1;
-reloadSpeed = 75;  //Equivale a 1.25 * room_speed
+target_x = room_width - 600;
 
-target_x = room_width - 600; //Lugar final antes del cambio
-
-ShootDir = 0 // o_player.direction;
-
-weaponType = ["standard", "beam", "multi", "homing"]
-weapon = "standard"
+// Movimiento
 state = "enter";
-Timer = 5;
-
 moveUp = 1;
 
-// Comportamiento ---------------------------
+// Disparo
+canShoot   = false; // false hasta que entre a "fight"
+shoot_timer = 0;
+
+// Fases de ataque (rotacion de armas)
+// Se configura segun la sala al entrar a "fight"
+shoot_phase = 0;
+
+// Temporizador de invocacion de minions
+summon_timer  = 0;
+summon_cd     = 8 * room_speed; // cada 8 segundos
+
+// Referencia al laser adherido (RoomL y RoomS)
+laser_inst = noone;

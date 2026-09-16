@@ -1,7 +1,6 @@
+/// @description - HealthBar
 
 draw_self()
-
-
 
 if(state = "fight")
 {

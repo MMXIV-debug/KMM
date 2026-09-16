@@ -1,18 +1,18 @@
 // Stats
 hp = 30;
 
-vSpeed = 4;
+vSpeed = 5;
 accel = 0.1;
-speedMax = 8;
+speedMax = 9;
 
 dmg = 10;
-pSpeed = 3.5;
+pSpeed = 3.9;
 
 
 // Comportamiento
 canShoot = true;
 
-reloadSpeed = 120;
+reloadSpeed = 90;
 
 state = "enter";
 

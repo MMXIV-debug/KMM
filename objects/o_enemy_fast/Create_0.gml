@@ -1,4 +1,4 @@
-move_speed = 10;
+move_speed = 15;
 dmg = 30;
 hp = 10;
 

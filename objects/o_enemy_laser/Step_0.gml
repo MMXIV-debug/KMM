@@ -1,0 +1,49 @@
+// Inherit the parent event
+event_inherited();
+
+switch(state)
+{
+    case "idle":
+        idle_timer--;
+        if (idle_timer <= 0)
+        {
+            state = "firing";
+            laser_duration = 120;
+            tick_timer = 0;
+            fire_direction = point_direction(x, y, o_player.x, o_player.y);
+        }
+        break;
+
+    case "firing":
+        laser_duration--;
+        tick_timer--;
+
+        if (tick_timer <= 0)
+        {
+            tick_timer = tick_interval;
+
+            if (collision_line(x, y, x + lengthdir_x(beam_length, fire_direction), y + lengthdir_y(beam_length, fire_direction), o_player, false, true))
+            {
+                with (o_player)
+                {
+                    c_player_take_damage(other.dmg_per_tick);
+                }
+            }
+        }
+
+        if (laser_duration <= 0)
+        {
+            state = "cooldown";
+            idle_timer = 150;
+        }
+        break;
+
+    case "cooldown":
+        idle_timer--;
+        if (idle_timer <= 0)
+        {
+            state = "idle";
+            idle_timer = 90;
+        }
+        break;
+}

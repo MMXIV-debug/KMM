@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":0,
   "parent":{
-    "name":"Players",
-    "path":"folders/Sprites/Players.yy",
+    "name":"Extras{",
+    "path":"folders/Sprites/Players/Extras{.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
