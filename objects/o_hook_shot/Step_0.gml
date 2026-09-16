@@ -1,34 +1,39 @@
-if (state == "flying")
-{
-    x += travel_speed * facing_dir;
-    traveled += travel_speed;
+if (!instance_exists(o_player)) { instance_destroy(); exit; }
 
-    var enemy = instance_place(x, y, o_enemy_body);
-    if (enemy != noone)
+// anclado al player: esto es lo que mantiene el feel cuerpo a cuerpo
+x = o_player.x + start_offset * facing_dir;
+y = o_player.y;
+
+if (state == "extend")
+{
+    length += extend_speed;
+    if (length >= max_range) { length = max_range; state = "retract"; }
+}
+else
+{
+    length -= retract_speed;
+    if (length <= 0) { instance_destroy(); exit; }
+}
+
+var tip_x = x + length * facing_dir;
+var tip_y = y;
+
+// Daño a todo lo que toque la linea, una sola vez por enemigo
+var found = ds_list_create();
+var count = collision_line_list(x, y, tip_x, tip_y, o_enemy_body, false, true, found, false);
+
+for (var i = 0; i < count; i++)
+{
+    var e = found[| i];
+    if (ds_list_find_index(hit_list, e) == -1)
     {
-        enemy.hp -= dmg;
-        target_enemy = enemy;
-        state = "pulling";
-    }
-    else if (traveled >= max_range)
-    {
-        instance_destroy();
+        e.hp -= dmg;
+        ds_list_add(hit_list, e);
+
+        var dirp = point_direction(e.x, e.y, x, y);
+        e.x += lengthdir_x(knockback, dirp);
+        e.y += lengthdir_y(knockback, dirp);
     }
 }
-else if (state == "pulling")
-{
-    if (!instance_exists(target_enemy))
-    {
-        instance_destroy();
-        exit;
-    }
+ds_list_destroy(found);
 
-    var dir_to_player = point_direction(target_enemy.x, target_enemy.y, o_player.x, o_player.y);
-    target_enemy.x += lengthdir_x(pull_speed, dir_to_player);
-    target_enemy.y += lengthdir_y(pull_speed, dir_to_player);
-
-    if (point_distance(target_enemy.x, target_enemy.y, o_player.x, o_player.y) < 40)
-    {
-        instance_destroy();
-    }
-}

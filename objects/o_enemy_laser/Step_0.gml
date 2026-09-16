@@ -5,12 +5,25 @@ switch(state)
 {
     case "idle":
         idle_timer--;
-        if (idle_timer <= 0)
+         if (idle_timer <= 0)
         {
-            state = "firing";
-            laser_duration = 120;
-            tick_timer = 0;
+            state     = "aiming";
+            aim_timer = aim_time;
             fire_direction = point_direction(x, y, o_player.x, o_player.y);
+        }
+        break;
+
+    case "aiming":
+        aim_timer--;
+        // sigue al player mientras apunta
+        if (instance_exists(o_player))
+            fire_direction = point_direction(x, y, o_player.x, o_player.y);
+
+        if (aim_timer <= 0)
+        {
+            state          = "firing";
+            laser_duration = 120;
+            tick_timer     = 0;
         }
         break;
 

@@ -2,6 +2,10 @@
 if (room == RoomK && !boss_spawned)
 {
     game_timer++;
+	if (o_player.is_dead)
+	{
+		boss_time += 30;
+	}
     if (game_timer >= boss_time)
     {
         boss_spawned = true;

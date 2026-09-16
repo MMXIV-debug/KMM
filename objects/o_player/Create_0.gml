@@ -56,12 +56,33 @@ deaths = 0;
 invuln_duration = 60;
 invuln_timer = 0;
 
-
 pending_weapon = "";
+
+// Gamepad (Xbox One) --------------------------
 pad_num = -1;
+pad_dead_zone = 0.25; // Dead zone para el stick analogico
+
+// Buscar el primer gamepad conectado
+for (var _i = 0; _i < 4; _i++)
+{
+    if (gamepad_is_connected(_i))
+    {
+        pad_num = _i;
+        gamepad_set_axis_deadzone(pad_num, pad_dead_zone);
+        show_debug_message("Gamepad detectado en slot: " + string(pad_num));
+        break;
+    }
+}
+
+// Constantes de botones Xbox One (GameMaker):
+//   gp_face1 = A,  gp_face2 = B,  gp_face3 = X,  gp_face4 = Y
+//   gp_shoulderl  = LB,  gp_shoulderr  = RB
+//   gp_shoulderlb = LT,  gp_shoulderrb = RT  (ejes, rango 0..1)
+//   gp_padr / gp_padl / gp_padu / gp_padd = D-Pad
+//   gp_axislh / gp_axislv = Left Stick eje horizontal / vertical
+//   gp_axisrh / gp_axisrv = Right Stick eje horizontal / vertical
 
 // Extras de la Sala L
-
 
 if (room == RoomL)
 {

@@ -21,13 +21,69 @@ if (invuln_timer > 0)
     invuln_timer--;
 }
 
+// ---------------------------------------------------------------
+// HELPERS: lectura unificada teclado + gamepad Xbox One
+// ---------------------------------------------------------------
+
+var _pad = pad_num;
+var _pad_connected = (_pad >= 0 && gamepad_is_connected(_pad));
+
+// Left Stick ejes
+var _stick_h = 0;
+var _stick_v = 0;
+if (_pad_connected)
+{
+    _stick_h = gamepad_axis_value(_pad, gp_axislh);
+    _stick_v = gamepad_axis_value(_pad, gp_axislv);
+}
+
+// Funcion auxiliar: boton gamepad presionado (held)
+// B          = gp_face2
+// RB         = gp_shoulderr
+// LT         = gp_shoulderlb  (eje, >0.15 = presionado)
+// RT         = gp_shoulderrb  (eje, >0.15 = presionado)
+// Right Arrow D-Pad = gp_padr
+// Down  Arrow D-Pad = gp_padd
+
+var _btn_attack_pad    = _pad_connected && gamepad_button_check_pressed(_pad, gp_face2);
+var _btn_dash_pad      = _pad_connected && gamepad_button_check_pressed(_pad, gp_shoulderr);
+var _btn_weapon_pad    = _pad_connected && gamepad_button_check_pressed(_pad, gp_padr);
+var _btn_final_pad     = _pad_connected && (gamepad_axis_value(_pad, gp_shoulderlb) > 0.15);
+var _btn_parry_pad     = _pad_connected && (gamepad_axis_value(_pad, gp_shoulderrb) > 0.15);
+var _btn_extra_pad     = _pad_connected && gamepad_button_check_pressed(_pad, gp_padd);
+
+// Para LT/RT guardamos estado anterior en variables persistentes para simular "pressed"
+// (Los triggers son ejes continuos, no botones digitales)
+if (!variable_instance_exists(id, "lt_prev")) lt_prev = false;
+if (!variable_instance_exists(id, "rt_prev")) rt_prev = false;
+
+var _lt_held = _pad_connected && (gamepad_axis_value(_pad, gp_shoulderlb) > 0.15);
+var _rt_held = _pad_connected && (gamepad_axis_value(_pad, gp_shoulderrb) > 0.15);
+
+var _btn_final_pressed = _lt_held && !lt_prev;   // LT  -> Poder Final (pressed)
+var _btn_parry_pressed = _rt_held && !rt_prev;   // RT  -> Absorber/Parry (pressed)
+
+lt_prev = _lt_held;
+rt_prev = _rt_held;
+
 // 2. Movimiento (dirección) ----------------------------
 
 speed_x = 0;
 speed_y = 0;
 
+// Teclado
 var dir_x = keyboard_check(ord("D")) - keyboard_check(ord("A"));
 var dir_y = keyboard_check(ord("S")) - keyboard_check(ord("W"));
+
+// Gamepad: Left Stick (sobrescribe teclado si hay input de stick)
+if (_pad_connected)
+{
+    if (abs(_stick_h) > 0 || abs(_stick_v) > 0)
+    {
+        dir_x = _stick_h;
+        dir_y = _stick_v;
+    }
+}
 
 // Con esto se controla el facing
 if (room != RoomK && room != RoomS && room != RoomT)
@@ -48,7 +104,10 @@ if (dir_x != 0 || dir_y != 0)
 
 if (dash_cooldown_timer > 0) dash_cooldown_timer--;
 
-if (keyboard_check_pressed(ord("I")) && dash_cooldown_timer <= 0 && dash_timer <= 0)
+// Dash: I (teclado) OR RB (gamepad)
+var _do_dash = keyboard_check_pressed(ord("I")) || _btn_dash_pad;
+
+if (_do_dash && dash_cooldown_timer <= 0 && dash_timer <= 0)
 {
     if (dir_x == 0 && dir_y == 0)
     {
@@ -113,7 +172,10 @@ else
     canShoot = 1; 
 }
 
-if (keyboard_check_pressed(ord("J")) && canShoot)
+// Ataque: J (teclado) OR B (gamepad, gp_face2)
+var _do_attack = (keyboard_check_pressed(ord("J")) || _btn_attack_pad) && canShoot;
+
+if (_do_attack)
 {
     if (room == RoomL)
     {
@@ -165,10 +227,10 @@ if (keyboard_check_pressed(ord("J")) && canShoot)
     canShoot = 0;
 }
 
-// 6 Inventario de armas RoomL
+// 6. Inventario de armas RoomL ----------------------------
+// Cambio arma: K (teclado) OR Right Arrow D-Pad (gamepad)
 
-
-if (keyboard_check_pressed(ord("K")))
+if (keyboard_check_pressed(ord("K")) || _btn_weapon_pad)
 {
     total_weapons = array_length(weapon_slots);
 
@@ -187,6 +249,30 @@ if (keyboard_check_pressed(ord("K")))
             "Arma Room L actual: " + weapon_RoomL
         );
     }
+}
+
+// 7. Poder Final (LT gamepad) ----------------------------
+// TODO: conectar con la logica de poder final cuando este implementada
+if (_btn_final_pressed)
+{
+    show_debug_message("PODER FINAL activado (LT)");
+    // Agregar aqui la llamada al poder final del jugador
+}
+
+// 8. Absorber / Parry (RT gamepad) ----------------------------
+// TODO: conectar con la logica de parry cuando este implementada
+if (_btn_parry_pressed && room == RoomS)
+{
+    show_debug_message("PARRY / ABSORBER activado (RT)");
+    // Agregar aqui la llamada a la mecanica de parry
+}
+
+// 9. Mecanica extra (Down Arrow D-Pad gamepad) ----------------------------
+// TODO: conectar con la mecanica extra cuando este implementada
+if (_btn_extra_pad && room == RoomT || room == RoomK || room == RoomS || room == RoomL)
+{
+    show_debug_message("MECANICA EXTRA activada (D-Pad Down)");
+    // Agregar aqui la llamada a la mecanica extra
 }
 
 if (invuln_timer > 0)

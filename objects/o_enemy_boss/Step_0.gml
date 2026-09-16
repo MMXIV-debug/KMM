@@ -67,11 +67,22 @@ else if (instance_exists(o_player))
 
     if (room == RoomK)
     {
-        // Fase unica: homing simple (como o_enemy_slow)
-        var obj = instance_create_layer(x, y, "att", o_enemy_shoot_hom);
-        obj.direction = point_direction(x, y, o_player.x, o_player.y);
-        obj.speed     = 12;
-        shoot_timer   = 2 * room_speed; // cada 2 segundos
+        var shots    = 4;   // par: abre un hueco al centro, obliga a moverse
+        var spread   = 14;  // grados entre cada bala
+        var base_dir = point_direction(x, y, o_player.x, o_player.y);
+
+        for (var i = 0; i < shots; i++)
+        {
+            var _dir = base_dir + (i - (shots - 1) / 2) * spread;
+            var obj  = instance_create_layer(x, y, "att", o_enemy_shoot_hom);
+            obj.direction    = _dir;
+            obj.image_angle  = _dir;
+            obj.speed        = 20;   // era 12
+            obj.image_xscale = 2.5;
+            obj.image_yscale = 2.5;
+            obj.dmg          = 25;   // era 10
+        }
+        shoot_timer = 2 * room_speed;
     }
 
     else if (room == RoomL)
@@ -79,11 +90,22 @@ else if (instance_exists(o_player))
         // Alternancia: homing → laser → homing → laser...
         if (shoot_phase == 0)
         {
-            // Homing
-            var obj = instance_create_layer(x, y, "att", o_enemy_shoot_hom);
-            obj.direction = point_direction(x, y, o_player.x, o_player.y);
-            obj.speed     = 12;
-            shoot_timer   = 2 * room_speed;
+            var shots     = 5;   // cantidad de proyectiles
+            var spread    = 12;  // grados entre cada uno
+            var base_dir  = point_direction(x, y, o_player.x, o_player.y);
+
+            for (var i = 0; i < shots; i++)
+            {
+                var _dir = base_dir + (i - (shots - 1) / 2) * spread;
+                var obj  = instance_create_layer(x, y, "att", o_enemy_shoot_hom);
+                obj.direction    = _dir;
+                obj.image_angle  = _dir;
+                obj.speed        = 20;   // era 12
+                obj.image_xscale = 2.5;  // mas grande (la hitbox escala sola)
+                obj.image_yscale = 2.5;
+                obj.dmg          = 25;   // era 10
+            }
+            shoot_timer = 2 * room_speed;
         }
         else
         {
@@ -146,4 +168,11 @@ if (summon_timer >= summon_cd)
         instance_create_layer(room_width + 64, irandom_range(96, room_height - 96), "Instances", o_enemyL_fast);
         instance_create_layer(room_width + 64, irandom_range(96, room_height - 96), "Instances", o_enemyL_fast);
     }
+}
+
+// Consecuencia de la muerte del o_player
+
+if (o_player.is_dead)
+{
+	hp += 50;
 }

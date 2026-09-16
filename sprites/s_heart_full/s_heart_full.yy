@@ -3,7 +3,7 @@
   "%Name":"s_heart_full",
   "bboxMode":0,
   "bbox_bottom":54,
-  "bbox_left":13,
+  "bbox_left":12,
   "bbox_right":51,
   "bbox_top":19,
   "collisionKind":1,
@@ -12,14 +12,14 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"v1","%Name":"04ef5c1c-c077-404a-b78c-06f04d341f9b","name":"04ef5c1c-c077-404a-b78c-06f04d341f9b","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"150490b5-b7ac-49c5-b4e0-1cb568208b37","name":"150490b5-b7ac-49c5-b4e0-1cb568208b37","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
   "height":64,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"4f8ee75a-5aed-4c2f-ae09-1e9af01f4d8c","blendMode":0,"displayName":"default","isLocked":false,"name":"4f8ee75a-5aed-4c2f-ae09-1e9af01f4d8c","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"9b789ca8-19d0-4b62-9c01-20ed80839ef1","blendMode":0,"displayName":"default","isLocked":false,"name":"9b789ca8-19d0-4b62-9c01-20ed80839ef1","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"s_heart_full",
   "nineSlice":null,
@@ -69,8 +69,8 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"04ef5c1c-c077-404a-b78c-06f04d341f9b","path":"sprites/s_heart_full/s_heart_full.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"e1eb9310-be19-4daf-baa8-a3746a703dd0","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"150490b5-b7ac-49c5-b4e0-1cb568208b37","path":"sprites/s_heart_full/s_heart_full.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"0ae38b66-d062-499e-b230-230dc11d49d4","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,

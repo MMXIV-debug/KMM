@@ -1,10 +1,12 @@
 // Stats y bases generales
 
-dmg = 5;
-travel_speed = 12;
-max_range = 300;
-traveled = 0;
-state = "flying"; // flying -> pulling
-target_enemy = noone;
-pull_speed = 8;
-facing_dir = 1; // se sobreescribe desde el script al crearlo
+dmg = 12;
+max_range = 340;   // alcance del latigo
+extend_speed = 25;    // px por step al extender
+retract_speed = 30;
+start_offset = 60;    // px por delante del player donde arranca el latigo
+length = 0;
+state = "extend";
+facing_dir = 1;
+knockback = 24;    // jalon hacia el player
+hit_list = ds_list_create();
