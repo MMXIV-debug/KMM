@@ -1,11 +1,14 @@
-// Solo activo en RoomK: contar el tiempo y spawnear el boss al minuto
-if (room == RoomK && !boss_spawned)
+// Contar el tiempo y spawnear el boss al minuto
+if ((room == RoomK || room == RoomL) && !boss_spawned)
 {
     game_timer++;
-	if (o_player.is_dead)
+	
+	if (instance_exists(o_player) && o_player.deaths > last_deaths)
 	{
-		boss_time += 30;
+	    boss_time += death_penalty * (o_player.deaths - last_deaths);
+	    last_deaths = o_player.deaths;
 	}
+	
     if (game_timer >= boss_time)
     {
         boss_spawned = true;
@@ -16,7 +19,7 @@ if (room == RoomK && !boss_spawned)
         }
         
         // Si el jugador tiene Homing, se lo quitamos y volvemos a Standard
-        if (instance_exists(o_player))
+        if (room == RoomK && instance_exists(o_player))
         {
             if (o_player.weapon == "Homing")
             {

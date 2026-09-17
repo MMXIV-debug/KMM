@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"c_weapon_standard",
   "parent":{
-    "name":"Functions",
-    "path":"folders/Functions.yy",
+    "name":"K",
+    "path":"folders/Functions/K.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

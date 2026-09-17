@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"c_player_take_damage",
   "parent":{
-    "name":"Functions",
-    "path":"folders/Functions.yy",
+    "name":"Control",
+    "path":"folders/Functions/Control.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

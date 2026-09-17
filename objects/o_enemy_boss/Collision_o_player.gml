@@ -4,5 +4,3 @@ with (o_player)
 {
     c_player_take_damage(damage_amount);
 }
-
-instance_destroy();

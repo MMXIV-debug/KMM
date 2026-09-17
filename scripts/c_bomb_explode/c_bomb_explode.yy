@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"c_weapon_spread",
+  "%Name":"c_bomb_explode",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"c_weapon_spread",
+  "name":"c_bomb_explode",
   "parent":{
-    "name":"K",
-    "path":"folders/Functions/K.yy",
+    "name":"L",
+    "path":"folders/Functions/L.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

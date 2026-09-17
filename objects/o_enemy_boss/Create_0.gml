@@ -6,8 +6,8 @@ dmg = 20;
 vSpeed = 1.5; // Velocidad horizontal de entrada
 hSpeed = 4;   // Velocidad oscilacion vertical
 
-image_xscale = 3;
-image_yscale = 3;
+image_xscale = 10;
+image_yscale = 10;
 
 target_x = room_width - 600;
 
@@ -29,3 +29,7 @@ summon_cd     = 8 * room_speed; // cada 8 segundos
 
 // Referencia al laser adherido (RoomL y RoomS)
 laser_inst = noone;
+
+// Extras
+last_deaths = instance_exists(o_player) ? o_player.deaths : 0;
+heal_on_kill = 100;

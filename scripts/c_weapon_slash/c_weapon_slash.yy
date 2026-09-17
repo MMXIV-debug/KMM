@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"c_weapon_slash",
   "parent":{
-    "name":"Functions",
-    "path":"folders/Functions.yy",
+    "name":"L",
+    "path":"folders/Functions/L.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
