@@ -1,0 +1,1999 @@
+﻿=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\oL_power_boomerang\Collision_o_player.gml ===
+if (!array_contains(other.weapon_slots, "Boomerang"))
+{
+    array_push(other.weapon_slots, "Boomerang");
+
+    other.total_weapons = array_length(other.weapon_slots);
+
+    show_debug_message("Â¡BOOMERANG DESBLOQUEADO!");
+}
+
+instance_destroy();
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\oL_power_boomerang\Create_0.gml ===
+vSeep = 5;
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\oL_power_spin\Collision_o_player.gml ===
+if (!array_contains(other.weapon_slots, "Spin"))
+{
+    array_push(other.weapon_slots, "Spin");
+
+    other.total_weapons = array_length(other.weapon_slots);
+
+    show_debug_message("Â¡SPIN DESBLOQUEADO!");
+}
+
+instance_destroy();
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\oL_power_spin\Create_0.gml ===
+vSpeed = 5;
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_att\Collision_o_enemy_body.gml ===
+instance_destroy();
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_att\Step_0.gml ===
+x += vSpeed;
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_bomb\Create_0.gml ===
+// Stats
+
+dmg = 60;
+explode_radius = 160;
+throw_speed = 20;
+max_range = 420; 
+facing_dir = 1;
+
+// Control
+
+state = "flying";  // flying -> stuck -> idle
+target = noone;
+off_x = 0;
+off_y = 0;
+traveled = 0;
+
+// Visual de explosiÃ³n
+boom_timer    = 0;
+boom_duration = 20;   // cuadros que dura el cÃ­rculo (0.33s)
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_bomb\Draw_0.gml ===
+draw_set_color(state == "stuck" ? c_red : c_orange);
+draw_circle(x, y, 10, false);
+draw_set_color(c_white);
+
+if (state == "boom")
+{
+    // cÃ­rculo naranja que se agranda y se desvanece
+    var _t     = 1 - (boom_timer / boom_duration); // 0 -> 1
+    var _r     = lerp(10, explode_radius, _t);
+    var _alpha = lerp(0.7, 0, _t);
+
+    draw_set_alpha(_alpha);
+    draw_set_color(c_orange);
+    draw_circle(x, y, _r, false);
+    draw_set_alpha(1);
+    draw_set_color(c_white);
+}
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_bomb\Step_0.gml ===
+// inicio de los stados
+switch(state)
+{
+	case "flying":
+		x += throw_speed * facing_dir;
+		traveled += throw_speed;
+		
+		// Se pega a lo primero que toque
+		var e = instance_place(x, y, o_enemy_body);
+		if (e == noone && instance_exists(o_enemy_boss))
+		{
+			if (place_meeting(x, y, o_enemy_boss))
+				e = instance_nearest(x, y, o_enemy_boss);
+		}
+		if (e != noone)
+		{
+			state = "stuck";
+			target = e;
+			// Guarda una posicion relativa
+			off_x = x - e.x;
+			off_y = y - e.y;
+		}
+		else if (traveled >= max_range || x < 0 || x > room_width)
+		{
+			state = "idle"; //La dejamos flotando todavia activable
+		}
+		break;
+	case "stuck":
+		if (!instance_exists(target))
+		{
+			instance_destroy(); // El target murio por ende la bomba desaparece
+			exit;
+		}
+		x = target.x + off_x;
+		y = target.y + off_y;
+		break;
+	case "boom":
+	    boom_timer--;
+	    if (boom_timer <= 0)
+	    {
+	        instance_destroy();
+	    }
+	    break;
+}
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_boss_orb\Create_0.gml ===
+speed         = 6;          // velocidad de desplazamiento
+dmg           = 30;         // daÃ±o al explotar
+travel_dist   = 300;        // distancia que recorre antes de explotar
+dist_traveled = 0;
+explode_radius = 120;       // radio de explosion en pixeles
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_boss_orb\Draw_0.gml ===
+// Dibujar la esfera: circulo morado que pulsa
+var pulse = sin(current_time / 80) * 3;
+draw_set_color(make_color_rgb(160, 0, 220));
+draw_circle(x, y, 10 + pulse, false);
+draw_set_color(make_color_rgb(220, 140, 255));
+draw_circle(x, y, 5 + pulse * 0.5, false);
+draw_set_color(c_white);
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_boss_orb\Step_0.gml ===
+// Avanzar en la direccion asignada
+dist_traveled += speed;
+
+// Explotar al llegar a la distancia limite
+if (dist_traveled >= travel_dist)
+{
+    // Danar al jugador si esta en el radio
+    if (instance_exists(o_player))
+    {
+        var d = point_distance(x, y, o_player.x, o_player.y);
+        if (d <= explode_radius)
+        {
+            with (o_player)
+            {
+                c_player_take_damage(other.dmg);
+            }
+        }
+    }
+    instance_destroy();
+}
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_enemy_body\Collision_o_att.gml ===
+hp -= other.dmg;
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_enemy_body\Collision_o_standard_slash.gml ===
+hp -= other.dmg;
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_enemy_body\Destroy_0.gml ===
+/// @description avisar al manager que ya puede spawnear otro y agregar al contador
+if (variable_instance_exists(id, "spawner_id") && instance_exists(spawner_id))
+{
+    spawner_id.alive_count = max(0, spawner_id.alive_count - 1);
+    spawner_id.enemy_alive = false;
+}
+
+global.kills_since_last_portal++;
+
+if (object_index == o_enemy_laser)
+{
+    c_unlock_weapon("Bomb");
+}
+
+if (room == RoomL)
+{
+    global.roomL_kills++;
+
+    if (global.roomL_kills >= 5)
+    {
+        var ya_desbloqueado = false;
+        for (var i = 0; i < array_length(o_player.weapon_slots); i++)
+        {
+            if (o_player.weapon_slots[i] == "Hook") ya_desbloqueado = true;
+        }
+
+        if (!ya_desbloqueado)
+        {
+            array_push(o_player.weapon_slots, "Hook");
+            show_debug_message("Â¡Gancho desbloqueado!");
+        }
+    }
+}
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_enemy_body\Step_0.gml ===
+//Comportamiento basico
+if (hp <= 0)
+	{
+		instance_destroy();
+	}
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_enemy_boss\Alarm_0.gml ===
+/// @description reload
+canShoot = true;
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_enemy_boss\Collision_o_player.gml ===
+var damage_amount = dmg;
+
+with (o_player)
+{
+    c_player_take_damage(damage_amount);
+}
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_enemy_boss\Create_0.gml ===
+// Stats ---------------------------
+hpMax = 250;
+
+if (room == RoomL)
+{
+    hpMax = 2500;
+    sprite_index = s_final_boss_1;
+}
+
+hp = hpMax;
+dmg = 20;
+
+vSpeed = 1.5; // Velocidad horizontal de entrada
+hSpeed = 4;   // Velocidad oscilacion vertical
+
+image_xscale = 10;
+image_yscale = 10;
+
+target_x = room_width - 600;
+
+// Movimiento
+state = "enter";
+moveUp = 1;
+
+// Disparo
+canShoot   = false; // false hasta que entre a "fight"
+shoot_timer = 0;
+
+// Fases de ataque (rotacion de armas)
+// Se configura segun la sala al entrar a "fight"
+shoot_phase = 0;
+
+// Temporizador de invocacion de minions
+summon_timer  = 0;
+summon_cd     = 8 * room_speed; // cada 8 segundos
+
+// Referencia al laser adherido (RoomL y RoomS)
+// Laser propio del boss (ya no es una instancia separada)
+laser_active        = false;
+laser_state         = "aiming";
+laser_timer         = 0;
+laser_direction     = 0;
+laser_aim_time      = 45;    // 0.75s de aviso
+laser_duration      = 120;   // 2s de rayo activo
+laser_tick_interval = 15;    // dano cada 0.25s
+laser_tick_timer    = 0;
+laser_dmg_per_tick  = 5;
+laser_beam_length   = 3000;
+laser_aim_length    = 1600;
+
+// Extras
+last_deaths = instance_exists(o_player) ? o_player.deaths : 0;
+heal_on_kill = 100;
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_enemy_boss\Destroy_0.gml ===
+// Detener todos los spawners de enemigos
+with (o_enemy_manager)
+{
+    instance_destroy();
+}
+
+if (room == RoomK)
+{
+    // Spawnear portal permanente hacia RoomL
+    var port = instance_create_layer(x, y, "Instances", o_portal);
+	port.target_room = RoomL;
+    port.alarm[0] = -1; // Sin lÃ­mite de tiempo: no desaparece
+}
+else if (room == RoomL)
+{
+	var port = instance_create_layer(x, y, "Instances", o_portal);
+	port.target_room = RoomS;
+	port.alarm[0] = -1;
+}
+
+else
+{
+    // Para otras salas (RoomT), enviar al jugador al final
+    if (instance_exists(o_player))
+    {
+        o_player.alarm[11] = 4 * room_speed;
+    }
+}
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_enemy_boss\Draw_0.gml ===
+/// @description - HealthBar y laser
+
+draw_self()
+
+if (state == "fight")
+{
+    var bar_w      = 32;
+    var bar_top    = 100;
+    var bar_bottom = room_height - 100;
+    var bar_h      = bar_bottom - bar_top;
+    var bar_x      = room_width - 60;   // pegada al borde derecho
+
+    var fill_h = (hp / hpMax) * bar_h;
+
+    // fondo: representa la vida ya perdida
+    draw_set_color(c_dkgray);
+    draw_rectangle(bar_x, bar_top, bar_x + bar_w, bar_bottom, false);
+
+    // vida actual: se llena desde abajo, el borde superior "baja" al recibir daÃ±o
+    draw_set_color(c_red);
+    draw_rectangle(bar_x, bar_bottom - fill_h, bar_x + bar_w, bar_bottom, false);
+
+    draw_set_color(c_white);
+    draw_rectangle(bar_x, bar_top, bar_x + bar_w, bar_bottom, true); // marco
+    draw_set_color(c_white);
+}
+
+
+if (laser_active)
+{
+    if (laser_state == "aiming")
+    {
+        var dash = 14, gap = 10, total = dash + gap;
+        var segs = laser_aim_length / total;
+
+        draw_set_color(c_red);
+        draw_set_alpha((laser_timer mod 20) < 10 ? 0.35 : 0.85);
+
+        for (var i = 0; i < segs; i++)
+        {
+            var d0 = i * total;
+            var d1 = d0 + dash;
+            draw_line_width(
+                x + lengthdir_x(d0, laser_direction), y + lengthdir_y(d0, laser_direction),
+                x + lengthdir_x(d1, laser_direction), y + lengthdir_y(d1, laser_direction), 2);
+        }
+        draw_set_alpha(1);
+        draw_set_color(c_white);
+    }
+    else if (laser_state == "firing")
+    {
+        draw_set_color(c_blue);
+        draw_line_width(x, y,
+            x + lengthdir_x(laser_beam_length, laser_direction),
+            y + lengthdir_y(laser_beam_length, laser_direction), 6);
+        draw_set_color(c_white);
+    }
+}
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_enemy_boss\Step_0.gml ===
+// Inherit the parent event
+event_inherited();
+
+// --------------------------------------------------------
+// ENTRADA: se mueve hacia target_x
+// --------------------------------------------------------
+if (state == "enter")
+{
+    if (x > target_x)
+    {
+        x -= vSpeed;
+    }
+    else
+    {
+        x     = target_x;
+        state = "fight";
+
+        // Al entrar a "fight": primer disparo tras 1 segundo
+        shoot_timer = 1 * room_speed;
+
+        
+    }
+    exit;
+}
+
+// --------------------------------------------------------
+// FIGHT: oscilacion vertical
+// --------------------------------------------------------
+if (moveUp)
+{
+    y -= hSpeed;
+    if (y <= 96) moveUp = 0;
+}
+else
+{
+    y += hSpeed;
+    if (y >= room_height - 96) moveUp = 1;
+}
+
+// --------------------------------------------------------
+// LASER PROPIO DEL BOSS
+// --------------------------------------------------------
+if (laser_active)
+{
+    switch (laser_state)
+    {
+        case "aiming":
+            laser_timer--;
+            if (instance_exists(o_player))
+                laser_direction = point_direction(x, y, o_player.x, o_player.y);
+
+            if (laser_timer <= 0)
+            {
+                laser_state      = "firing";
+                laser_timer      = laser_duration;
+                laser_tick_timer = 0;
+            }
+            break;
+
+        case "firing":
+            laser_timer--;
+            laser_tick_timer--;
+
+            if (laser_tick_timer <= 0)
+            {
+                laser_tick_timer = laser_tick_interval;
+
+                if (collision_line(x, y,
+                        x + lengthdir_x(laser_beam_length, laser_direction),
+                        y + lengthdir_y(laser_beam_length, laser_direction),
+                        o_player, false, true))
+                {
+                    with (o_player)
+                    {
+                        c_player_take_damage(other.laser_dmg_per_tick);
+                    }
+                }
+            }
+
+            if (laser_timer <= 0)
+            {
+                laser_active = false;
+                laser_state  = "aiming"; // listo para el prÃ³ximo disparo
+            }
+            break;
+    }
+}
+
+// --------------------------------------------------------
+// TEMPORIZADOR DE DISPARO
+// --------------------------------------------------------
+if (shoot_timer > 0)
+{
+    shoot_timer--;
+}
+else if (instance_exists(o_player))
+{
+    // --- FASE segun sala ---
+
+    if (room == RoomK)
+    {
+        var shots    = 10;   // par: abre un hueco al centro, obliga a moverse
+        var spread   = 14;  // grados entre cada bala
+        var base_dir = point_direction(x, y, o_player.x, o_player.y);
+
+        for (var i = 0; i < shots; i++)
+        {
+            var _dir = base_dir + (i - (shots - 1) / 2) * spread;
+            var obj  = instance_create_layer(x, y, "att", o_enemy_shoot_hom);
+            obj.direction    = _dir;
+            obj.image_angle  = _dir;
+            obj.speed        = 20;  
+            obj.image_xscale = 5;
+            obj.image_yscale = 5;
+            obj.dmg          = 25;   
+        }
+        shoot_timer = 2 * room_speed;
+    }
+
+    else if (room == RoomL)
+    {
+        // Alternancia: homing â†’ laser â†’ homing â†’ laser...
+        if (shoot_phase == 0)
+        {
+            var shots     = 10;   // cantidad de proyectiles
+            var spread    = 12;  // grados entre cada uno
+            var base_dir  = point_direction(x, y, o_player.x, o_player.y);
+
+            for (var i = 0; i < shots; i++)
+            {
+                var _dir = base_dir + (i - (shots - 1) / 2) * spread;
+                var obj  = instance_create_layer(x, y, "att", o_enemy_shoot_hom);
+                obj.direction    = _dir;
+                obj.image_angle  = _dir;
+	            obj.speed        = 20;  
+	            obj.image_xscale = 5;
+	            obj.image_yscale = 5;
+                obj.dmg          = 25;   // era 10
+            }
+            shoot_timer = 2 * room_speed;
+        }
+        else
+        {
+			laser_active    = true;
+			laser_state     = "aiming";
+			laser_timer     = laser_aim_time;
+			laser_direction = point_direction(x, y, o_player.x, o_player.y);
+			shoot_timer     = 5 * room_speed;
+        }
+        shoot_phase = 1 - shoot_phase; // alterna 0/1
+    }
+
+    else if (room == RoomS)
+    {
+        // Tres fases rotativas: homing â†’ laser â†’ orbe
+        if (shoot_phase == 0)
+        {
+            var obj = instance_create_layer(x, y, "att", o_enemy_shoot_hom);
+            obj.direction = point_direction(x, y, o_player.x, o_player.y);
+            obj.speed     = 12;
+            shoot_timer   = 2 * room_speed;
+        }
+        else if (shoot_phase == 1)
+        {
+			laser_active    = true;
+			laser_state     = "aiming";
+			laser_timer     = laser_aim_time;
+			laser_direction = point_direction(x, y, o_player.x, o_player.y);
+			shoot_timer     = 5 * room_speed;
+        }
+        else // shoot_phase == 2: orbe explosivo
+        {
+            var orb = instance_create_layer(x, y, "att", o_boss_orb);
+            orb.direction = point_direction(x, y, o_player.x, o_player.y);
+            shoot_timer   = 3 * room_speed;
+        }
+        shoot_phase++;
+        if (shoot_phase > 2) shoot_phase = 0;
+    }
+}
+
+// --------------------------------------------------------
+// INVOCACION DE MINIONS (cada 8 segundos en fight)
+// --------------------------------------------------------
+summon_timer++;
+if (summon_timer >= summon_cd)
+{
+    summon_timer = 0;
+
+    if (room == RoomK)
+    {
+        instance_create_layer(room_width + 64, irandom_range(96, room_height - 96), "Instances", o_enemy_fast);
+        instance_create_layer(room_width + 64, irandom_range(96, room_height - 96), "Instances", o_enemy_fast);
+    }
+    else if (room == RoomL)
+    {
+        instance_create_layer(room_width + 64, irandom_range(96, room_height - 96), "Instances", o_enemyL_fast);
+        instance_create_layer(room_width + 64, irandom_range(96, room_height - 96), "Instances", o_enemyL_fast);
+    }
+	/*else if (room == RoomS)
+	{
+		instance_create_layer(room_width + 64, irandom_range(96, room_height - 96), "Instances", o_enemyS_fast);
+        instance_create_layer(room_width + 64, irandom_range(96, room_height - 96), "Instances", o_enemyS_fast);
+	}*/
+}
+
+// Consecuencia de la muerte del o_player
+
+if (instance_exists(o_player) && o_player.deaths > last_deaths)
+{
+    hp = min(hp + heal_on_kill * (o_player.deaths - last_deaths), hpMax);
+    last_deaths = o_player.deaths;
+}
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_enemy_fast\Collision_o_player.gml ===
+var damage_amount = dmg;
+
+with (o_player)
+{
+    c_player_take_damage(damage_amount);
+}
+
+instance_destroy();
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_enemy_fast\Create_0.gml ===
+move_speed = 15;
+dmg = 30;
+hp = 10;
+
+var paths = [path_kamikaze_1, path_kamikaze_2, path_kamikaze_3];
+var chosen_path = paths[irandom(array_length(paths) - 1)];
+path_start(chosen_path, move_speed, path_action_stop, false);
+
+gpu_set_texfilter(false);
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_enemy_fast\Other_8.gml ===
+instance_destroy();
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_enemy_laser\Create_0.gml ===
+hp = 25;
+state = "idle";
+idle_timer = 90;       // tiempo antes de empezar a disparar (1.5s)
+laser_duration = 120;  // cuÃ¡nto dura el rayo activo (2s)
+tick_interval = 15;    // cada cuÃ¡nto hace daÃ±o (0.25s = 4 veces por segundo)
+tick_timer = 0;
+dmg_per_tick = 5;
+beam_length = 3000;
+fire_direction = 0;
+aim_time   = 45;   // 0.75s de aviso
+aim_timer  = 0;
+aim_length = 1600; // largo de la guia punteada
+image_xscale = 2;
+image_yscale = 2;
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_enemy_laser\Draw_0.gml ===
+draw_self();
+
+if (state == "aiming")
+{
+    var dash = 14, gap = 10, total = dash + gap;
+    var segs = aim_length / total;
+
+    draw_set_color(c_red);
+    draw_set_alpha((aim_timer mod 20) < 10 ? 0.35 : 0.85); // parpadeo
+
+    for (var i = 0; i < segs; i++)
+    {
+        var d0 = i * total;
+        var d1 = d0 + dash;
+        draw_line_width(
+            x + lengthdir_x(d0, fire_direction), y + lengthdir_y(d0, fire_direction),
+            x + lengthdir_x(d1, fire_direction), y + lengthdir_y(d1, fire_direction), 2);
+    }
+
+    draw_set_alpha(1);
+    draw_set_color(c_white);
+}
+
+if (state == "firing")
+{
+    draw_set_color(c_blue);
+    draw_line_width(x, y, x + lengthdir_x(beam_length, fire_direction), y + lengthdir_y(beam_length, fire_direction), 6);
+    draw_set_color(c_white);
+}
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_enemy_laser\Step_0.gml ===
+// Inherit the parent event
+event_inherited();
+
+switch(state)
+{
+    case "idle":
+        idle_timer--;
+         if (idle_timer <= 0)
+        {
+            state     = "aiming";
+            aim_timer = aim_time;
+            fire_direction = point_direction(x, y, o_player.x, o_player.y);
+        }
+        break;
+
+    case "aiming":
+        aim_timer--;
+        // sigue al player mientras apunta
+        if (instance_exists(o_player))
+            fire_direction = point_direction(x, y, o_player.x, o_player.y);
+
+        if (aim_timer <= 0)
+        {
+            state          = "firing";
+            laser_duration = 120;
+            tick_timer     = 0;
+        }
+        break;
+
+    case "firing":
+        laser_duration--;
+        tick_timer--;
+
+        if (tick_timer <= 0)
+        {
+            tick_timer = tick_interval;
+
+            if (collision_line(x, y, x + lengthdir_x(beam_length, fire_direction), y + lengthdir_y(beam_length, fire_direction), o_player, false, true))
+            {
+                with (o_player)
+                {
+                    c_player_take_damage(other.dmg_per_tick);
+                }
+            }
+        }
+
+        if (laser_duration <= 0)
+        {
+            state = "cooldown";
+            idle_timer = 150;
+        }
+        break;
+
+    case "cooldown":
+        idle_timer--;
+        if (idle_timer <= 0)
+        {
+            state = "idle";
+            idle_timer = 90;
+        }
+        break;
+}
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_enemy_manager\Alarm_0.gml ===
+/// @description spawn-check
+if (alive_count < max_alive)
+{
+    var sy = irandom_range(spawn_margin, room_height - spawn_margin);
+    var sx = spawn_x + irandom_range(-spawn_x_jitter, spawn_x_jitter);
+
+    var _type = enemy_type;
+    if (array_length(spawn_types) > 0)
+    {
+        _type = spawn_types[irandom(array_length(spawn_types) - 1)];
+    }
+
+    var enemy = instance_create_layer(sx, sy, "Instances", _type);
+    enemy.spawner_id = id;
+
+    alive_count++;
+    enemy_alive = true;
+}
+
+alarm[0] = max(15, spawn_check_time + irandom_range(-spawn_variance, spawn_variance));
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_enemy_manager\Create_0.gml ===
+
+enemy_type  = o_enemy_fast;   // fallback si no se define spawn_types
+spawn_types = [];             // si lo llenÃ¡s desde la room, elige al azar
+
+spawn_x        = 1925;
+spawn_x_jitter = 120;         // variaciÃ³n horizontal
+spawn_margin   = 32;
+
+spawn_check_time = 60;
+spawn_variance   = 45;        // +/- pasos de variaciÃ³n en el intervalo
+
+max_alive    = 1;             // subilo a 2 o 3 para oleadas
+alive_count  = 0;
+enemy_alive  = false;         // se mantiene por compatibilidad
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_enemy_manager\Other_4.gml ===
+
+// arranque desfasado: cada spawner empieza en un momento distinto
+alarm[0] = irandom_range(15, spawn_check_time + spawn_variance);
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_enemy_pow\Collision_o_player.gml ===
+var damage_amount = dmg;
+
+with (o_player)
+{
+    c_player_take_damage(damage_amount);
+}
+
+instance_destroy();
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_enemy_pow\Create_0.gml ===
+//Stats
+//Atributos
+hp = 20;
+move_speed = 5;
+dmg = 10;
+
+//Extras
+gpu_set_texfilter(false);
+
+
+// Efecto de movimiento 
+//PosiciÃ³n inicial
+x_inicio = x;
+y_inicio = y;
+
+// Fuerza del viento
+amplitud = 15;
+
+// Velocidad
+velocidad = 0.05;
+
+// Tiempo
+tiempo = 0;
+
+// Ãngulo mÃ¡ximo de movimiento
+angulo_max = 15;
+
+// Extras
+var paths = [path_pow_1, path_pow_2];
+var chosen_path = paths[irandom(array_length(paths) - 1)];
+
+path_start(chosen_path, move_speed, path_action_stop, false);
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_enemy_pow\Destroy_0.gml ===
+// Inherit the parent event
+event_inherited();
+
+if (hp <= 0)
+{
+    var tipo = irandom_range(1, 100);
+
+    if (tipo <= 45)
+    {
+        instance_create_layer(x, y, "Instances", o_power_plus);
+    } 
+    else if (tipo <= 70) 
+    {
+        instance_create_layer(x, y, "Instances", o_power_homing);
+    } 
+    else if (tipo <= 82)
+    {
+        instance_create_layer(x, y, "Instances", o_power_overdrive);
+    }
+    // tipo > 82 (18%): no suelta nada
+}
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_enemy_pow\Other_8.gml ===
+instance_destroy();
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_enemy_pow\Step_0.gml ===
+// Inherit the parent event
+event_inherited();
+
+// Avanza el tiempo
+tiempo += velocidad;
+
+// Movimiento de balanceo
+image_angle = sin(tiempo) * angulo_max;
+
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_enemy_shoot_hom\Collision_o_player.gml ===
+var damage_amount = dmg;
+
+with (o_player)
+{
+    c_player_take_damage(damage_amount);
+}
+
+instance_destroy();
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_enemy_shoot_hom\Create_0.gml ===
+dmg = 10;
+speed = 5;
+
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_enemy_shoot_hom\Other_0.gml ===
+instance_destroy();
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_enemy_shoot_hom\Step_0.gml ===
+image_angle = direction;
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_enemy_slow\Alarm_0.gml ===
+/// @description reload
+canShoot = true;
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_enemy_slow\Alarm_1.gml ===
+/// @description escape
+state = "escape"
+vSpeed = 1;
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_enemy_slow\Collision_o_player.gml ===
+var damage_amount = dmg;
+
+with (o_player)
+{
+    c_player_take_damage(damage_amount);
+}
+
+instance_destroy();
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_enemy_slow\Create_0.gml ===
+// Stats
+hp = 30;
+
+vSpeed = 5;
+accel = 0.1;
+speedMax = 9;
+
+dmg = 10;
+pSpeed = 3.9;
+
+
+// Comportamiento
+canShoot = true;
+
+reloadSpeed = 90;
+
+state = "enter";
+
+spawner_id = noone;
+
+// PosiciÃ³n objetivo
+target_x = room_width - 520;
+
+
+// Tiempo de combate
+fight_t = 6 * room_speed;
+
+
+// Alarmas
+alarm[0] = irandom(120);
+alarm[1] = -1;
+
+
+// Extras
+gpu_set_texfilter(false);
+drop_chance = 5; // % de probabilidad de soltar el power-up
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_enemy_slow\Destroy_0.gml ===
+// Inherit the parent event
+event_inherited();
+
+if (hp <= 0 && irandom_range(1, 100) <= drop_chance)
+{
+    instance_create_layer(x, y, "pow", o_power_homing);
+}
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_enemy_slow\Step_0.gml ===
+event_inherited();
+
+switch (state)
+{
+    case "enter":
+        if (x > target_x)
+        {
+            x -= vSpeed;
+        }
+        else
+        {
+            x = target_x;
+            state = "fight";
+            alarm[1] = fight_t;
+        }
+
+    break;
+
+
+    case "fight":
+
+        if (canShoot)
+        {
+            canShoot = false;
+            alarm[0] = reloadSpeed;
+            if (instance_exists(o_player))
+            {
+                var obj = instance_create_layer(x, y, "att", o_enemy_shoot_hom);
+                obj.direction = point_direction(x,y,o_player.x,o_player.y);
+                obj.speed = 15;
+            }
+        }
+
+    break;
+
+
+    case "escape":
+
+        if (vSpeed < speedMax)
+        {
+            vSpeed += accel;
+        }
+        x -= vSpeed;
+        if (x < -64)
+        {
+            instance_destroy();
+        }
+
+    break;
+}
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_game_manager\Create_0.gml ===
+global.kills_since_last_portal = 0;
+
+game_timer = 0;
+boss_spawned = false;
+boss_time = 60 * room_speed; // 1 minuto exacto
+last_deaths = 0;
+death_penalty = 15 * room_speed; // 15 segundos extra por muerte
+
+spawn_margin = 64;
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_game_manager\Draw_64.gml ===
+
+
+if (!boss_spawned)
+{
+    var remaining = max(0, boss_time - game_timer);
+    var secs = remaining div room_speed;
+
+    var gui_w = display_get_gui_width();
+
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_top);
+    draw_set_color(c_white);
+    draw_text(gui_w / 2, 20, "Jefe en: " + string(secs) + "s");
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
+}
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_game_manager\Step_0.gml ===
+// Contar el tiempo y spawnear el boss al minuto
+if ((room == RoomK || room == RoomL) && !boss_spawned)
+{
+    game_timer++;
+	
+	if (instance_exists(o_player) && o_player.deaths > last_deaths)
+	{
+	    boss_time += death_penalty * (o_player.deaths - last_deaths);
+	    last_deaths = o_player.deaths;
+	}
+	
+    if (game_timer >= boss_time)
+    {
+        boss_spawned = true;
+        // Desactivar todos los spawners de enemigos comunes
+        with (o_enemy_manager)
+        {
+            instance_destroy();
+        }
+        
+        // Si el jugador tiene Homing, se lo quitamos y volvemos a Standard
+        if (room == RoomK && instance_exists(o_player))
+        {
+            if (o_player.weapon == "Homing")
+            {
+                o_player.weapon = "Standard";
+                o_player.powlvl = 1;
+            }
+            if (o_player.pending_weapon == "Homing")
+            {
+                o_player.pending_weapon = "";
+            }
+        }
+
+        // Boss entra desde la derecha hacia la mitad de pantalla
+        instance_create_layer(room_width + 100, room_height / 2, "Instances", o_enemy_boss);
+    }
+}
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_homing_shot\Create_0.gml ===
+dmg = 10;
+move_speed = 15;
+turn_rate = 6; // grados que puede girar por step; mÃ¡s alto = gira mÃ¡s brusco
+
+speed = move_speed;
+direction = 0; // se corrige apenas arranca el primer Step
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_homing_shot\Step_0.gml ===
+var target = instance_nearest(x, y, o_enemy_body);
+
+if (target != noone)
+{
+    var target_dir = point_direction(x, y, target.x, target.y);
+    var diff = angle_difference(target_dir, direction);
+    direction += clamp(diff, -turn_rate, turn_rate);
+}
+
+speed = move_speed;
+image_angle = direction - 90;
+
+if (x < -50 || x > room_width + 50 || y < -50 || y > room_height + 50)
+{
+    instance_destroy();
+}
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_homing_shot_2\Create_0.gml ===
+// Inherit the parent event
+event_inherited();
+dmg = 20;
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_homing_shot_3\Create_0.gml ===
+// Inherit the parent event
+event_inherited();
+dmg = 30;
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_hook_shot\CleanUp_0.gml ===
+ds_list_destroy(hit_list);
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_hook_shot\Create_0.gml ===
+// Stats y bases generales
+
+dmg = 12;
+max_range = 340;   // alcance del latigo
+extend_speed = 25;    // px por step al extender
+retract_speed = 30;
+start_offset = 60;    // px por delante del player donde arranca el latigo
+length = 0;
+state = "extend";
+facing_dir = 1;
+knockback = 24;    // jalon hacia el player
+hit_list = ds_list_create();
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_hook_shot\Draw_0.gml ===
+var tip_x = x + length * facing_dir;
+draw_set_color(make_color_rgb(255, 180, 60));
+draw_line_width(x, y, tip_x, y, 4);
+draw_circle(tip_x, y, 5, false);
+draw_set_color(c_white);
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_hook_shot\Step_0.gml ===
+if (!instance_exists(o_player)) { instance_destroy(); exit; }
+
+// anclado al player: esto es lo que mantiene el feel cuerpo a cuerpo
+x = o_player.x + start_offset * facing_dir;
+y = o_player.y;
+
+if (state == "extend")
+{
+    length += extend_speed;
+    if (length >= max_range) { length = max_range; state = "retract"; }
+}
+else
+{
+    length -= retract_speed;
+    if (length <= 0) { instance_destroy(); exit; }
+}
+
+var tip_x = x + length * facing_dir;
+var tip_y = y;
+
+// DaÃ±o a todo lo que toque la linea, una sola vez por enemigo
+var found = ds_list_create();
+var count = collision_line_list(x, y, tip_x, tip_y, o_enemy_body, false, true, found, false);
+
+for (var i = 0; i < count; i++)
+{
+    var e = found[| i];
+    if (ds_list_find_index(hit_list, e) == -1)
+    {
+        e.hp -= dmg;
+        ds_list_add(hit_list, e);
+
+        var dirp = point_direction(e.x, e.y, x, y);
+        e.x += lengthdir_x(knockback, dirp);
+        e.y += lengthdir_y(knockback, dirp);
+    }
+}
+ds_list_destroy(found);
+
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_menu_controller\Create_0.gml ===
+title_text = "Titulo PlaceHolder";
+
+btn_start_x1 = room_width/2 - 100;
+btn_start_y1 = room_height/2;
+btn_start_x2 = room_width/2 + 100;
+btn_start_y2 = room_height/2 + 50;
+
+btn_quit_x1 = room_width/2 - 100;
+btn_quit_y1 = room_height/2 + 70;
+btn_quit_x2 = room_width/2 + 100;
+btn_quit_y2 = room_height/2 + 120;
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_menu_controller\Draw_0.gml ===
+// TÃ­tulo (placeholder de texto, reemplazable por sprite despuÃ©s)
+draw_set_halign(fa_center);
+draw_set_valign(fa_middle);
+draw_set_color(c_white);
+draw_text(room_width/2, room_height/2 - 150, title_text);
+
+/* 
+	BotÃ³n Start (placeholder rectÃ¡ngulo, reemplazable por sprite despuÃ©s)
+	solo cambiar las lÃ­neas de draw_text/draw_rectangle por draw_sprite/draw_sprite_stretched
+*/
+draw_set_color(c_gray);
+draw_rectangle(btn_start_x1, btn_start_y1, btn_start_x2, btn_start_y2, false); 
+draw_set_color(c_white);
+draw_text((btn_start_x1 + btn_start_x2)/2, (btn_start_y1 + btn_start_y2)/2, "JUGAR");
+
+/*
+	BotÃ³n Quit
+	solo cambiar las lÃ­neas de draw_text/draw_rectangle por draw_sprite/draw_sprite_stretched
+*/
+draw_set_color(c_gray);
+draw_rectangle(btn_quit_x1, btn_quit_y1, btn_quit_x2, btn_quit_y2, false);
+draw_set_color(c_white);
+draw_text((btn_quit_x1 + btn_quit_x2)/2, (btn_quit_y1 + btn_quit_y2)/2, "SALIR");
+
+draw_set_halign(fa_left);
+draw_set_valign(fa_top);
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_menu_controller\Step_0.gml ===
+if (mouse_check_button_pressed(mb_left))
+{
+    var mx = mouse_x;
+    var my = mouse_y;
+
+    if (mx > btn_start_x1 && mx < btn_start_x2 && my > btn_start_y1 && my < btn_start_y2)
+    {
+        room_goto(RoomJTutorial); //Cambio de room inicial
+    }
+	else if (mx > btn_start_x1 && mx < btn_start_x2 && my > btn_start_y1 && my < btn_start_y2 && !primera_vez)
+	{
+		room_goto(RoomK);
+	}
+    else if (mx > btn_quit_x1 && mx < btn_quit_x2 && my > btn_quit_y1 && my < btn_quit_y2)
+    {
+        game_end();
+    }
+}
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_player\Alarm_0.gml ===
+/// @description  reload
+canShoot = 1;
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_player\Alarm_1.gml ===
+/// @description  respawn
+
+x = 64;
+y = 576;
+
+hp = max_hp;
+is_dead = false;
+powlvl = 1;
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_player\Alarm_11.gml ===
+/// @description Cambiar al final
+
+room_goto(RoomVEnd);
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_player\Create_0.gml ===
+// Stats ----------------------
+
+speed_x = 0;
+speed_y = 0;
+
+move_speed = 9;
+respawnTime = 1 * room_speed; 
+
+// Estado ---------------
+State = 0;
+max_hp = 100;
+hp = max_hp;
+
+total_hearts = 6;
+
+// Dash -----------------------
+
+dash_speed = 20;
+dash_duration = 12;
+dash_timer = 0;
+
+dash_cooldown = 30;
+dash_cooldown_timer = 0;
+
+dash_dir_x = 0;
+dash_dir_y = 0;
+
+// Ataque ----------------------
+
+attack_cooldown = 20;
+attack_timer = 0;
+ 
+canShoot = 1;
+reloadSpeed = 15;
+powlvl = 1;
+powMax = 3;
+
+// Extras ----------------------
+overdrive_shots_left = 0;
+
+gpu_set_texfilter(false);
+
+weapon = "Standard";
+if (variable_global_exists("weapon_override"))
+{
+    weapon = global.weapon_override;
+}
+show_debug_message("Player creado con weapon: " + weapon);
+
+powerup_duration = 600; // 600 pasos = 10 segundos a 60 FPS
+facing = 1; //Lugar a donde esta viendo 1 = derecha, -1 = izquierda
+
+// Control
+is_dead = false;
+deaths = 0;
+invuln_duration = 60;
+invuln_timer = 0;
+
+pending_weapon = "";
+
+// Gamepad (Xbox One) --------------------------
+pad_num = -1;
+pad_dead_zone = 0.25; // Dead zone para el stick analogico
+
+// Buscar el primer gamepad conectado
+for (var _i = 0; _i < 4; _i++)
+{
+    if (gamepad_is_connected(_i))
+    {
+        pad_num = _i;
+        gamepad_set_axis_deadzone(pad_num, pad_dead_zone);
+        show_debug_message("Gamepad detectado en slot: " + string(pad_num));
+        break;
+    }
+}
+
+// Constantes de botones Xbox One (GameMaker):
+//   gp_face1 = A,  gp_face2 = B,  gp_face3 = X,  gp_face4 = Y
+//   gp_shoulderl  = LB,  gp_shoulderr  = RB
+//   gp_shoulderlb = LT,  gp_shoulderrb = RT  (ejes, rango 0..1)
+//   gp_padr / gp_padl / gp_padu / gp_padd = D-Pad
+//   gp_axislh / gp_axislv = Left Stick eje horizontal / vertical
+//   gp_axisrh / gp_axisrv = Right Stick eje horizontal / vertical
+
+// Extras de la Sala L
+
+if (room == RoomL)
+{
+    global.roomL_kills = 0; // Contador global de kills para desbloqueo de armas en la RoomL
+}
+
+weapon_slots = ["Slash"];
+current_weapon_index = 0;
+weapon_RoomL = "Slash";
+total_weapons = array_length(weapon_slots);
+
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_player\Draw_0.gml ===
+if (invuln_timer > 0 && (invuln_timer div 4) % 2 == 0)
+{
+    gpu_set_blendmode(bm_add);
+    draw_self();
+    gpu_set_blendmode(bm_normal);
+}
+else
+{
+    draw_self();
+}
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_player\Draw_64.gml ===
+// Indicador de vida (corazones) ----------------------------
+var hp_per_heart = max_hp / total_hearts; // con 100 hp y 6 corazones â‰ˆ 16.67 por corazÃ³n
+var heart_size = 32;
+var heart_spacing = 25;
+var start_x = 20;
+var start_y = 20;
+
+for (var i = 0; i < total_hearts; i++)
+{
+    var heart_hp = hp - (i * hp_per_heart);
+    var heart_x = start_x + i * (heart_size + heart_spacing);
+
+    if (heart_hp >= hp_per_heart)
+    {
+        draw_sprite(s_heart_full, 0, heart_x, start_y);
+    }
+    else if (heart_hp > 0)
+    {
+        draw_sprite(s_heart_half, 0, heart_x, start_y);
+    }
+    else
+    {
+        draw_sprite(s_heart_empty, 0, heart_x, start_y);
+    }
+}
+
+// Indicador de muerte y dibujo en pantalla ----------------------------
+/*if (is_dead)
+{
+    // Oscurecer pantalla
+    draw_set_alpha(0.6);
+    draw_set_color(c_black);
+    draw_rectangle(0, 0, display_get_gui_width(), display_get_gui_height(), false);
+    draw_set_alpha(1); // importante: resetear el alpha para que el texto no salga transparente
+
+    var gui_w = display_get_gui_width();
+    var gui_h = display_get_gui_height();
+
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
+    draw_set_color(c_white);
+    draw_text(gui_w/2, gui_h/2 - 40, "Moriste");
+
+    var btn_x1 = gui_w/2 - 80;
+    var btn_y1 = gui_h/2;
+    var btn_x2 = gui_w/2 + 80;
+    var btn_y2 = gui_h/2 + 40;
+
+    draw_set_color(c_gray);
+    draw_rectangle(btn_x1, btn_y1, btn_x2, btn_y2, false);
+    draw_set_color(c_white);
+    draw_text((btn_x1 + btn_x2)/2, (btn_y1 + btn_y2)/2, "Reiniciar");
+
+    if (mouse_check_button_pressed(mb_left))
+    {
+        var mx = device_mouse_x_to_gui(0);
+        var my = device_mouse_y_to_gui(0);
+
+        if (mx > btn_x1 && mx < btn_x2 && my > btn_y1 && my < btn_y2)
+        {
+            room_goto(RoomIMenu);
+        }
+    }
+
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
+}*/
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_player\Step_0.gml ===
+// 1. Deteccion de muerte y estado del player
+
+if (!is_dead && hp <= 0)
+{
+    is_dead = true;
+	deaths += 1;
+	//instance_destroy(x,y, "Instances", o_death);
+	y-=2000;
+	alarm[1] = respawnTime;
+    speed_x = 0;
+    speed_y = 0;
+}
+
+if (is_dead)
+{
+    exit; // corta acÃ¡: no se mueve, no dashea, no ataca
+}
+
+if (invuln_timer > 0)
+{
+    invuln_timer--;
+}
+
+// ---------------------------------------------------------------
+// HELPERS: lectura unificada teclado + gamepad Xbox One
+// ---------------------------------------------------------------
+
+var _pad = pad_num;
+var _pad_connected = (_pad >= 0 && gamepad_is_connected(_pad));
+
+// Left Stick ejes
+var _stick_h = 0;
+var _stick_v = 0;
+if (_pad_connected)
+{
+    _stick_h = gamepad_axis_value(_pad, gp_axislh);
+    _stick_v = gamepad_axis_value(_pad, gp_axislv);
+}
+
+// Funcion auxiliar: boton gamepad presionado (held)
+// B          = gp_face2
+// RB         = gp_shoulderr
+// LT         = gp_shoulderlb  (eje, >0.15 = presionado)
+// RT         = gp_shoulderrb  (eje, >0.15 = presionado)
+// Right Arrow D-Pad = gp_padr
+// Down  Arrow D-Pad = gp_padd
+
+var _btn_attack_pad    = _pad_connected && gamepad_button_check_pressed(_pad, gp_face2);
+var _btn_dash_pad      = _pad_connected && gamepad_button_check_pressed(_pad, gp_shoulderr);
+var _btn_weapon_pad    = _pad_connected && gamepad_button_check_pressed(_pad, gp_padr);
+var _btn_final_pad     = _pad_connected && (gamepad_axis_value(_pad, gp_shoulderlb) > 0.15);
+var _btn_parry_pad     = _pad_connected && (gamepad_axis_value(_pad, gp_shoulderrb) > 0.15);
+var _btn_extra_pad     = _pad_connected && gamepad_button_check_pressed(_pad, gp_padd);
+
+// Para LT/RT guardamos estado anterior en variables persistentes para simular "pressed"
+// (Los triggers son ejes continuos, no botones digitales)
+if (!variable_instance_exists(id, "lt_prev")) lt_prev = false;
+if (!variable_instance_exists(id, "rt_prev")) rt_prev = false;
+
+var _lt_held = _pad_connected && (gamepad_axis_value(_pad, gp_shoulderlb) > 0.15);
+var _rt_held = _pad_connected && (gamepad_axis_value(_pad, gp_shoulderrb) > 0.15);
+
+var _btn_final_pressed = _lt_held && !lt_prev;   // LT  -> Poder Final (pressed)
+var _btn_parry_pressed = _rt_held && !rt_prev;   // RT  -> Absorber/Parry (pressed)
+
+lt_prev = _lt_held;
+rt_prev = _rt_held;
+
+// 2. Movimiento (direcciÃ³n) ----------------------------
+
+speed_x = 0;
+speed_y = 0;
+
+// Teclado
+var dir_x = keyboard_check(ord("D")) - keyboard_check(ord("A"));
+var dir_y = keyboard_check(ord("S")) - keyboard_check(ord("W"));
+
+// Gamepad: Left Stick (sobrescribe teclado si hay input de stick)
+if (_pad_connected)
+{
+    if (abs(_stick_h) > 0 || abs(_stick_v) > 0)
+    {
+        dir_x = _stick_h;
+        dir_y = _stick_v;
+    }
+}
+
+// Con esto se controla el facing
+if (room != RoomK && room != RoomS && room != RoomT)
+{
+    if (dir_x > 0) facing = 1;
+    else if (dir_x < 0) facing = -1;
+}
+image_xscale = facing;
+
+if (dir_x != 0 || dir_y != 0)
+{
+    var distancia = point_distance(0, 0, dir_x, dir_y);
+    dir_x /= distancia;
+    dir_y /= distancia;
+}
+
+// 3. Dash ----------------------------
+
+if (dash_cooldown_timer > 0) dash_cooldown_timer--;
+
+// Dash: I (teclado) OR RB (gamepad)
+var _do_dash = keyboard_check_pressed(ord("I")) || _btn_dash_pad;
+
+if (_do_dash && dash_cooldown_timer <= 0 && dash_timer <= 0)
+{
+    if (dir_x == 0 && dir_y == 0)
+    {
+        dash_dir_x = 0;
+        dash_dir_y = -1;
+    }
+    else
+    {
+        dash_dir_x = dir_x;
+        dash_dir_y = dir_y;
+    }
+    dash_timer = dash_duration;
+    dash_cooldown_timer = dash_cooldown;
+    show_debug_message("DASH!");
+}
+
+if (dash_timer > 0)
+{
+    speed_x = dash_dir_x * dash_speed;
+    speed_y = dash_dir_y * dash_speed;
+    dash_timer--;
+}
+else
+{
+    speed_x = dir_x * move_speed;
+    speed_y = dir_y * move_speed;
+}
+
+// 4. Aplicar movimiento ----------------------------
+
+x += speed_x;
+y += speed_y;
+
+// 4.5 Limitar al player dentro de la pantalla ----------------------------
+
+if (bbox_left < 0)
+{
+    x -= bbox_left;
+}
+if (bbox_right > room_width)
+{
+    x -= (bbox_right - room_width);
+}
+if (bbox_top < 0)
+{
+    y -= bbox_top;
+}
+if (bbox_bottom > room_height)
+{
+    y -= (bbox_bottom - room_height);
+}
+
+// 5. Ataque con cooldown funcional ----------------------------
+
+if (attack_timer > 0)
+{
+    attack_timer--;
+    canShoot = 0;
+}
+else
+{
+    canShoot = 1; 
+}
+
+// Ataque: J (teclado) OR B (gamepad, gp_face2)
+var _do_attack = (keyboard_check_pressed(ord("J")) || _btn_attack_pad) && canShoot;
+
+if (_do_attack)
+{
+    if (room == RoomL)
+    {
+		switch (weapon_RoomL)
+		{
+			case "Slash":
+				c_weapon_slash();
+				break;
+
+			case "Hook":
+				c_weapon_hook();
+				break;
+			case "Bomb":
+			    c_weapon_bomb();
+			    break;
+		}
+	attack_timer = attack_cooldown;
+	canShoot = 0;
+    }
+	else if (room == RoomK or room == RoomT)
+	{
+		switch(weapon)
+	    {
+			//Armas de la RoomK
+	        case "Standard":
+	            c_weapon_standard(powlvl);
+	            break;
+			case "Spread":
+			    c_weapon_spread(powlvl);
+			    overdrive_shots_left--;
+
+			    if (overdrive_shots_left <= 0)
+			    {
+			        if (pending_weapon != "")
+			        {
+			            weapon = pending_weapon;
+			            pending_weapon = "";
+			        }
+			        else
+			        {
+			            weapon = "Standard";
+			        }
+			    }
+			    break;
+			case "Homing":
+				c_weapon_homing(powlvl);
+				break;
+		
+	    }
+	}
+    attack_timer = attack_cooldown;
+    canShoot = 0;
+}
+
+// 6. Inventario de armas RoomL ----------------------------
+// Cambio arma: K (teclado) OR Right Arrow D-Pad (gamepad)
+
+if (keyboard_check_pressed(ord("K")) || _btn_weapon_pad)
+{
+    total_weapons = array_length(weapon_slots);
+
+    if (total_weapons > 1)
+    {
+        current_weapon_index++;
+
+        if (current_weapon_index >= total_weapons)
+        {
+            current_weapon_index = 0;
+        }
+
+        weapon_RoomL = weapon_slots[current_weapon_index];
+
+        show_debug_message(
+            "Arma Room L actual: " + weapon_RoomL
+        );
+    }
+}
+
+// 7. Poder Final (LT gamepad) ----------------------------
+// TODO: conectar con la logica de poder final cuando este implementada
+if (_btn_final_pressed)
+{
+    show_debug_message("PODER FINAL activado (LT)");
+    // Agregar aqui la llamada al poder final del jugador
+}
+
+// 8. Absorber / Parry (RT gamepad) ----------------------------
+// TODO: conectar con la logica de parry cuando este implementada
+if (_btn_parry_pressed && room == RoomS)
+{
+    show_debug_message("PARRY / ABSORBER activado (RT)");
+    // Agregar aqui la llamada a la mecanica de parry
+}
+
+// 9. Mecanica extra (Down Arrow D-Pad gamepad) ----------------------------
+// TODO: conectar con la mecanica extra cuando este implementada
+if (_btn_extra_pad && room == RoomT || room == RoomK || room == RoomS || room == RoomL)
+{
+    show_debug_message("MECANICA EXTRA activada (D-Pad Down)");
+    // Agregar aqui la llamada a la mecanica extra
+}
+
+if (invuln_timer > 0)
+{
+    show_debug_message("INVULNERABLE: " + string(invuln_timer));
+}
+
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_portal\Alarm_0.gml ===
+/// @description el jugador no llegÃ³ a tiempo, desaparece
+instance_destroy();
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_portal\Collision_o_player.gml ===
+/// @description ir a la room configurada por quien creÃ³ el portal
+
+if (target_room == RoomL)
+{
+    global.weapon_override = "Slash";
+}
+
+show_debug_message("Room elegida: " + room_get_name(target_room));
+
+room_goto(target_room);
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_portal\Create_0.gml ===
+alarm[0] = 5 * room_speed;
+image_xscale = 2;
+image_yscale = 2;
+
+target_room = RoomL;   // destino por defecto (mantiene el comportamiento actual del portal de RoomK)
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_power_homing\Collision_o_player.gml ===
+if (other.weapon == "Spread")
+{
+    // Overdrive activo: el Homing queda en cola, no lo reemplaza
+    other.pending_weapon = "Homing";
+}
+else
+{
+    other.weapon = "Homing";
+}
+instance_destroy();
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_power_homing\Create_0.gml ===
+vSpeed = 5;
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_power_overdrive\Collision_o_player.gml ===
+if (other.weapon == "Homing")
+{
+    other.pending_weapon = "Homing";
+}
+
+other.weapon = "Spread";
+other.overdrive_shots_left = 5;
+
+instance_destroy();
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_power_overdrive\Create_0.gml ===
+vSpeed = 5;
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_power_plus\Collision_o_player.gml ===
+if (o_player.powlvl < o_player.powMax)
+	o_player.powlvl += 1;
+instance_destroy();
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_power_plus\Create_0.gml ===
+vSpeed = 5;
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_pwr\Step_0.gml ===
+x -= vSpeed;
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_spread_shot\Create_0.gml ===
+vSpeed = 15;
+dmg = 10;
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_spread_shot\Step_0.gml ===
+event_inherited();
+image_angle = direction - 90;
+if (x < -50 || x > room_width + 50 || y < -50 || y > room_height + 50)
+{
+    instance_destroy();
+}
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_spread_shot_2\Create_0.gml ===
+// Inherit the parent event
+event_inherited();
+dmg = 20;
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_spread_shot_3\Create_0.gml ===
+// Inherit the parent event
+event_inherited();
+dmg = 30;
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_standard_shot\Create_0.gml ===
+vSpeed = 15;
+dmg = 10;
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_standard_shot_2\Create_0.gml ===
+vSpeed = 15;
+dmg = 20;
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_standard_shot_3\Create_0.gml ===
+vSpeed = 15;
+dmg = 30;
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_standard_slash\Alarm_0.gml ===
+/// @description se acaba el ataque
+ds_list_destroy(hit_list);
+instance_destroy();
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_standard_slash\Collision_o_enemy_body.gml ===
+alarm[0] = 8;
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_standard_slash\Create_0.gml ===
+dmg = 15;
+duration = 15; //calculado en steps
+destroy_timer = 5;
+alarm[0] = duration;
+
+facing = 1;
+image_xscale = facing;
+
+hit_list = ds_list_create();
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_standard_slash\Step_0.gml ===
+// Se mantiene pegado adelante del player mientras dura el ataque
+if (instance_exists(o_player))
+{
+    x = o_player.x + (80 * facing);
+    y = o_player.y;
+}
+// Golpea a todos los enemigos que toque, una sola vez cada uno
+var found = ds_list_create();
+var count = instance_place_list(x, y, o_enemy_body, found, false);
+
+for (var i = 0; i < count; i++)
+{
+    var enemy = found[| i];
+    if (ds_list_find_index(hit_list, enemy) == -1)
+    {
+        enemy.hp -= dmg;
+        ds_list_add(hit_list, enemy);
+    }
+}
+
+ds_list_destroy(found);
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_tutorial_controller\Draw_0.gml ===
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\objects\o_tutorial_controller\Step_0.gml ===
+
+if (keyboard_check_pressed(vk_anykey) && room != RoomT)
+{
+	room_goto(RoomK);
+}
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\scripts\c_bomb_explode\c_bomb_explode.gml ===
+function c_bomb_explode(_x, _y, _radius, _dmg){
+	with(o_enemy_body)
+	{
+		if(point_distance(x, y, _x, _y) <= _radius) 
+			hp -= _dmg;
+	}
+	with (o_enemy_boss)
+    {
+        if (point_distance(x, y, _x, _y) <= _radius) 
+		hp -= _dmg;
+    }
+	if (instance_exists(o_player) && point_distance(o_player.x, o_player.y, _x, _y) <= _radius)
+	{
+	    with (o_player) c_player_take_damage(15);
+	}
+}
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\scripts\c_player_take_damage\c_player_take_damage.gml ===
+function c_player_take_damage(amount)
+{
+    if (invuln_timer > 0)
+    {
+        exit; // ignorar el golpe, todavÃ­a invulnerable
+    }
+
+    hp -= amount;
+    invuln_timer = invuln_duration;
+
+    if (weapon == "Homing")
+    {
+        weapon = "Standard";
+    }
+	powlvl = max(powlvl - 1, 1);
+}
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\scripts\c_unlock_weapon\c_unlock_weapon.gml ===
+function c_unlock_weapon(_name)
+{
+    if (!instance_exists(o_player)) return;
+
+    for (var i = 0; i < array_length(o_player.weapon_slots); i++)
+    {
+        if (o_player.weapon_slots[i] == _name) return; // ya lo tiene
+    }
+
+    array_push(o_player.weapon_slots, _name);
+    o_player.total_weapons = array_length(o_player.weapon_slots);
+    show_debug_message("Arma desbloqueada: " + _name);
+}
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\scripts\c_weapon_bomb\c_weapon_bomb.gml ===
+function c_weapon_bomb()
+{
+    if (instance_exists(o_bomb))
+    {
+        // segundo apretÃ³n: detonar
+        with (o_bomb)
+        {
+            c_bomb_explode(x, y, explode_radius, dmg);
+            if (instance_exists(o_bomb))
+				{
+				    // segundo apretÃ³n: detonar
+				    with (o_bomb)
+				    {
+				        c_bomb_explode(x, y, explode_radius, dmg);
+				        state      = "boom";
+				        boom_timer = boom_duration;
+				    }
+				}
+        }
+    }
+    else
+    {
+        // primer apretÃ³n: lanzar
+        var b = instance_create_layer(x + 40 * facing, y, "att", o_bomb);
+        b.facing_dir = facing;
+    }
+}
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\scripts\c_weapon_homing\c_weapon_homing.gml ===
+function c_weapon_homing(argument0)
+{
+    switch(argument0)
+    {
+        case 1:
+            instance_create_layer(x+30, y, "att", o_homing_shot);
+            break;
+        case 2:
+            instance_create_layer(x+30, y, "att", o_homing_shot_2);
+            break;
+        case 3:
+            instance_create_layer(x+30, y, "att", o_homing_shot_3);
+            break;
+    }
+    canShoot = 0;
+    alarm[0] = reloadSpeed;
+}
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\scripts\c_weapon_hook\c_weapon_hook.gml ===
+function c_weapon_hook()
+{
+    var atk = instance_create_layer(x, y, "att", o_hook_shot);
+    atk.facing_dir = facing;
+}
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\scripts\c_weapon_slash\c_weapon_slash.gml ===
+function c_weapon_slash()
+{
+    var offset = 80 * facing;
+    var atk = instance_create_layer(x + offset, y, "att", o_standard_slash);
+    atk.facing = facing;
+    atk.image_xscale = facing;
+}
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\scripts\c_weapon_spread\c_weapon_spread.gml ===
+function c_weapon_spread(argument0)
+{
+    var cantidad = 10;
+    var angulo_inicial = -60;
+    var angulo_final = 60;
+
+    var bullet_obj = o_spread_shot;
+    switch(argument0)
+    {
+        case 2: bullet_obj = o_spread_shot_2; break;
+        case 3: bullet_obj = o_spread_shot_3; break;
+    }
+
+    for (var i = 0; i < cantidad; i++)
+    {
+        var angulo = lerp(angulo_inicial, angulo_final, i / (cantidad - 1));
+        var bala = instance_create_layer(x+30, y, "att", bullet_obj);
+        bala.direction = angulo;
+        bala.speed = 8;
+    }
+}
+
+=== C:\Users\ykira\GameMakerProjects\Top Down Shooter\scripts\c_weapon_standard\c_weapon_standard.gml ===
+function c_weapon_standard()
+{
+	switch(argument0)
+	{
+		case 1:
+			instance_create_layer(x+30,y, "att", o_standard_shot);
+			break;
+		case 2:
+			instance_create_layer(x+30,y, "att", o_standard_shot_2);
+			break;
+		case 3:
+			instance_create_layer(x+30,y, "att", o_standard_shot_3);
+			break;
+	}
+	canShoot = 0;
+	alarm[0] = reloadSpeed;
+}
+
