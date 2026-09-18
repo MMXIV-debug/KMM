@@ -1,13 +1,10 @@
-/// @description ir a una room al azar
+/// @description ir a la room configurada por quien creó el portal
 
-var rooms = [RoomL, RoomS];
-//var chosen_room = rooms[irandom(1)];
-var chosen_room = RoomL
-if (chosen_room == RoomL)
+if (target_room == RoomL)
 {
     global.weapon_override = "Slash";
 }
 
-show_debug_message("Room elegida: " + room_get_name(chosen_room) + " | override: " + (variable_global_exists("weapon_override") ? global.weapon_override : "NO EXISTE"));
+show_debug_message("Room elegida: " + room_get_name(target_room));
 
-room_goto(chosen_room);
+room_goto(target_room);

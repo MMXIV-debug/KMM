@@ -13,3 +13,7 @@ target = noone;
 off_x = 0;
 off_y = 0;
 traveled = 0;
+
+// Visual de explosión
+boom_timer    = 0;
+boom_duration = 20;   // cuadros que dura el círculo (0.33s)

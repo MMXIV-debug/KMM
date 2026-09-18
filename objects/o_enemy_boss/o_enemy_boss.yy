@@ -13,8 +13,8 @@
   "name":"o_enemy_boss",
   "overriddenProperties":[],
   "parent":{
-    "name":"Enemies",
-    "path":"folders/Objects/Enemies.yy",
+    "name":"Boss",
+    "path":"folders/Objects/Enemies/Boss.yy",
   },
   "parentObjectId":{
     "name":"o_enemy_body",

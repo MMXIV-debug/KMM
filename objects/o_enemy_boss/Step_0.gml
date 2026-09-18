@@ -18,17 +18,7 @@ if (state == "enter")
         // Al entrar a "fight": primer disparo tras 1 segundo
         shoot_timer = 1 * room_speed;
 
-        // Si RoomL o RoomS: crear un o_enemy_laser adherido al boss
-        if (room == RoomL || room == RoomS)
-        {
-            if (!instance_exists(laser_inst))
-            {
-                laser_inst = instance_create_layer(x, y, "att", o_enemy_laser);
-                // Configurar el laser para que no haga su propio movimiento
-                laser_inst.state       = "idle";
-                laser_inst.idle_timer  = 9999; // se controla desde aqui
-            }
-        }
+        
     }
     exit;
 }
@@ -47,11 +37,53 @@ else
     if (y >= room_height - 96) moveUp = 1;
 }
 
-// Mantener laser adherido (sigue la posicion del boss)
-if (instance_exists(laser_inst))
+// --------------------------------------------------------
+// LASER PROPIO DEL BOSS
+// --------------------------------------------------------
+if (laser_active)
 {
-    laser_inst.x = x;
-    laser_inst.y = y;
+    switch (laser_state)
+    {
+        case "aiming":
+            laser_timer--;
+            if (instance_exists(o_player))
+                laser_direction = point_direction(x, y, o_player.x, o_player.y);
+
+            if (laser_timer <= 0)
+            {
+                laser_state      = "firing";
+                laser_timer      = laser_duration;
+                laser_tick_timer = 0;
+            }
+            break;
+
+        case "firing":
+            laser_timer--;
+            laser_tick_timer--;
+
+            if (laser_tick_timer <= 0)
+            {
+                laser_tick_timer = laser_tick_interval;
+
+                if (collision_line(x, y,
+                        x + lengthdir_x(laser_beam_length, laser_direction),
+                        y + lengthdir_y(laser_beam_length, laser_direction),
+                        o_player, false, true))
+                {
+                    with (o_player)
+                    {
+                        c_player_take_damage(other.laser_dmg_per_tick);
+                    }
+                }
+            }
+
+            if (laser_timer <= 0)
+            {
+                laser_active = false;
+                laser_state  = "aiming"; // listo para el próximo disparo
+            }
+            break;
+    }
 }
 
 // --------------------------------------------------------
@@ -90,7 +122,7 @@ else if (instance_exists(o_player))
         // Alternancia: homing → laser → homing → laser...
         if (shoot_phase == 0)
         {
-            var shots     = 5;   // cantidad de proyectiles
+            var shots     = 10;   // cantidad de proyectiles
             var spread    = 12;  // grados entre cada uno
             var base_dir  = point_direction(x, y, o_player.x, o_player.y);
 
@@ -100,22 +132,20 @@ else if (instance_exists(o_player))
                 var obj  = instance_create_layer(x, y, "att", o_enemy_shoot_hom);
                 obj.direction    = _dir;
                 obj.image_angle  = _dir;
-                obj.speed        = 20;   // era 12
-                obj.image_xscale = 2.5;  // mas grande (la hitbox escala sola)
-                obj.image_yscale = 2.5;
+	            obj.speed        = 20;  
+	            obj.image_xscale = 5;
+	            obj.image_yscale = 5;
                 obj.dmg          = 25;   // era 10
             }
             shoot_timer = 2 * room_speed;
         }
         else
         {
-            // Activar laser si existe
-            if (instance_exists(laser_inst))
-            {
-                laser_inst.state      = "idle";
-                laser_inst.idle_timer = 20; // 0.33s de preparacion
-            }
-            shoot_timer = 5 * room_speed; // laser dura 2s + cooldown
+			laser_active    = true;
+			laser_state     = "aiming";
+			laser_timer     = laser_aim_time;
+			laser_direction = point_direction(x, y, o_player.x, o_player.y);
+			shoot_timer     = 5 * room_speed;
         }
         shoot_phase = 1 - shoot_phase; // alterna 0/1
     }
@@ -132,12 +162,11 @@ else if (instance_exists(o_player))
         }
         else if (shoot_phase == 1)
         {
-            if (instance_exists(laser_inst))
-            {
-                laser_inst.state      = "idle";
-                laser_inst.idle_timer = 20;
-            }
-            shoot_timer = 5 * room_speed;
+			laser_active    = true;
+			laser_state     = "aiming";
+			laser_timer     = laser_aim_time;
+			laser_direction = point_direction(x, y, o_player.x, o_player.y);
+			shoot_timer     = 5 * room_speed;
         }
         else // shoot_phase == 2: orbe explosivo
         {

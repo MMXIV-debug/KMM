@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"c_unlock_weapon",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"c_unlock_weapon",
+  "parent":{
+    "name":"Control",
+    "path":"folders/Functions/Control.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

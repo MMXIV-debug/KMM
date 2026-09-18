@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"c_weapon_bomb",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"c_weapon_bomb",
+  "parent":{
+    "name":"L",
+    "path":"folders/Functions/L.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -34,4 +34,11 @@ switch(state)
 		x = target.x + off_x;
 		y = target.y + off_y;
 		break;
+	case "boom":
+	    boom_timer--;
+	    if (boom_timer <= 0)
+	    {
+	        instance_destroy();
+	    }
+	    break;
 }

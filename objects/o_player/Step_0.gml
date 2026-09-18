@@ -188,6 +188,9 @@ if (_do_attack)
 			case "Hook":
 				c_weapon_hook();
 				break;
+			case "Bomb":
+			    c_weapon_bomb();
+			    break;
 		}
 	attack_timer = attack_cooldown;
 	canShoot = 0;
