@@ -1,9 +1,7 @@
 // Inherit the parent event
 event_inherited();
 
-// --------------------------------------------------------
 // ENTRADA: se mueve hacia target_x
-// --------------------------------------------------------
 if (state == "enter")
 {
     if (x > target_x)
@@ -23,9 +21,7 @@ if (state == "enter")
     exit;
 }
 
-// --------------------------------------------------------
 // FIGHT: oscilacion vertical
-// --------------------------------------------------------
 if (moveUp)
 {
     y -= hSpeed;
@@ -37,9 +33,7 @@ else
     if (y >= room_height - 96) moveUp = 1;
 }
 
-// --------------------------------------------------------
 // LASER PROPIO DEL BOSS
-// --------------------------------------------------------
 if (laser_active)
 {
     switch (laser_state)
@@ -86,9 +80,7 @@ if (laser_active)
     }
 }
 
-// --------------------------------------------------------
 // TEMPORIZADOR DE DISPARO
-// --------------------------------------------------------
 if (shoot_timer > 0)
 {
     shoot_timer--;
@@ -179,9 +171,6 @@ else if (instance_exists(o_player))
     }
 }
 
-// --------------------------------------------------------
-// INVOCACION DE MINIONS (cada 8 segundos en fight)
-// --------------------------------------------------------
 summon_timer++;
 if (summon_timer >= summon_cd)
 {

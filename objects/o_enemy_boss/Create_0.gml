@@ -27,7 +27,6 @@ canShoot   = false; // false hasta que entre a "fight"
 shoot_timer = 0;
 
 // Fases de ataque (rotacion de armas)
-// Se configura segun la sala al entrar a "fight"
 shoot_phase = 0;
 
 // Temporizador de invocacion de minions
@@ -35,14 +34,13 @@ summon_timer  = 0;
 summon_cd     = 8 * room_speed; // cada 8 segundos
 
 // Referencia al laser adherido (RoomL y RoomS)
-// Laser propio del boss (ya no es una instancia separada)
 laser_active        = false;
 laser_state         = "aiming";
 laser_timer         = 0;
 laser_direction     = 0;
 laser_aim_time      = 45;    // 0.75s de aviso
 laser_duration      = 120;   // 2s de rayo activo
-laser_tick_interval = 15;    // dano cada 0.25s
+laser_tick_interval = 15;    // daño cada 0.25s
 laser_tick_timer    = 0;
 laser_dmg_per_tick  = 5;
 laser_beam_length   = 3000;

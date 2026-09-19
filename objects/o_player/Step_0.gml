@@ -225,6 +225,17 @@ if (_do_attack)
 				break;
 		
 	    }
+	attack_timer = attack_cooldown;
+	canShoot = 0;
+	}
+	else if (room == RoomS || room == RoomT)
+	{
+		switch(weapon)
+		{
+			case "bucket":
+				c_weapon_bucket(x, y, facing);
+				break;
+		}
 	}
     attack_timer = attack_cooldown;
     canShoot = 0;
@@ -262,7 +273,7 @@ if (_btn_final_pressed)
     // Agregar aqui la llamada al poder final del jugador
 }
 
-// 8. Absorber / Parry (RT gamepad) ----------------------------
+/*// 8. Absorber / Parry (RT gamepad) ----------------------------
 // TODO: conectar con la logica de parry cuando este implementada
 if (_btn_parry_pressed && room == RoomS)
 {
