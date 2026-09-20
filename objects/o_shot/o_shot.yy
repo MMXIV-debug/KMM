@@ -1,19 +1,20 @@
 {
   "$GMObject":"",
-  "%Name":"o_enemyL_slow",
+  "%Name":"o_shot",
   "eventList":[
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":1,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"o_enemyL_slow",
+  "name":"o_shot",
   "overriddenProperties":[],
   "parent":{
-    "name":"L",
-    "path":"folders/Objects/Enemies/L.yy",
+    "name":"S",
+    "path":"folders/Objects/Player/Attacks/S.yy",
   },
   "parentObjectId":{
-    "name":"o_enemy_slow",
-    "path":"objects/o_enemy_slow/o_enemy_slow.yy",
+    "name":"o_att",
+    "path":"objects/o_att/o_att.yy",
   },
   "persistent":false,
   "physicsAngularDamping":0.1,
@@ -33,8 +34,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"sL_enemy_2",
-    "path":"sprites/sL_enemy_2/sL_enemy_2.yy",
+    "name":"s_paint_shot",
+    "path":"sprites/s_paint_shot/s_paint_shot.yy",
   },
   "spriteMaskId":null,
   "visible":true,

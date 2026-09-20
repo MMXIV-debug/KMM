@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"c_weapon_bucket",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"c_weapon_bucket",
+  "parent":{
+    "name":"S",
+    "path":"folders/Functions/S.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

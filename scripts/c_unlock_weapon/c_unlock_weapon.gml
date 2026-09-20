@@ -4,7 +4,7 @@ function c_unlock_weapon(_name)
 
     for (var i = 0; i < array_length(o_player.weapon_slots); i++)
     {
-        if (o_player.weapon_slots[i] == _name) return; // ya lo tiene
+        if (o_player.weapon_slots[i] == _name) return;
     }
 
     array_push(o_player.weapon_slots, _name);

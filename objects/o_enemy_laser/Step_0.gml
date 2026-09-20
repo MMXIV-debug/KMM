@@ -3,6 +3,18 @@ event_inherited();
 
 switch(state)
 {
+	case "enter":
+		if (x > target_x)
+        {
+            x -= vSpeed;
+        }
+        else
+        {
+            x = target_x;
+            state = "fight";
+            alarm[1] = fight_t;
+        }
+		break;
     case "idle":
         idle_timer--;
          if (idle_timer <= 0)

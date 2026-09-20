@@ -1,5 +1,5 @@
 // Contar el tiempo y spawnear el boss al minuto
-if ((room == RoomK || room == RoomL) && !boss_spawned)
+if ((room == RoomK || room == RoomL || room == RoomS) && !boss_spawned)
 {
     game_timer++;
 	
