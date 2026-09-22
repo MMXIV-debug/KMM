@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"c_player_register_parry",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"c_player_register_parry",
+  "parent":{
+    "name":"S",
+    "path":"folders/Functions/S.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

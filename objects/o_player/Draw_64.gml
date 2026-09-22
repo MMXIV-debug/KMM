@@ -23,3 +23,26 @@ for (var i = 0; i < total_hearts; i++)
         draw_sprite(s_heart_empty, 0, heart_x, start_y);
     }
 }
+
+
+// Barra de carga del Parry (RoomS)
+if (room == RoomS)
+{
+    var bar_w = 220, bar_h = 18;
+    var bar_x = start_x;
+    var bar_y = start_y + heart_size + 20;
+    var fill_w = bar_w * (parry_charge / parry_charge_max);
+
+    draw_set_color(c_black);
+    draw_rectangle(bar_x - 2, bar_y - 2, bar_x + bar_w + 2, bar_y + bar_h + 2, false);
+
+    draw_set_color(make_color_rgb(80, 20, 60));
+    draw_rectangle(bar_x, bar_y, bar_x + bar_w, bar_y + bar_h, false);
+
+    draw_set_color(charged_shot_ready ? make_color_rgb(255, 215, 90) : make_color_rgb(255, 90, 180));
+    draw_rectangle(bar_x, bar_y, bar_x + fill_w, bar_y + bar_h, false);
+
+    draw_set_color(c_white);
+    draw_text(bar_x, bar_y + bar_h + 4,
+        charged_shot_ready ? "¡DISPARO CARGADO LISTO! (J)" : string(round(parry_charge)) + "/" + string(parry_charge_max));
+}

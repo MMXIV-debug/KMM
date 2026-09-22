@@ -276,12 +276,23 @@ if (_btn_final_pressed)
     // Agregar aqui la llamada al poder final del jugador
 }
 
-/*// 8. Absorber / Parry (RT gamepad) ----------------------------
-// TODO: conectar con la logica de parry cuando este implementada
-if (_btn_parry_pressed && room == RoomS)
+// 8. Parry / Absorber (O teclado, RT gamepad) ----------------------------
+if (parry_cooldown_timer > 0) parry_cooldown_timer--;
+
+if (parry_timer > 0)
 {
-    show_debug_message("PARRY / ABSORBER activado (RT)");
-    // Agregar aqui la llamada a la mecanica de parry
+    parry_timer--;
+    if (parry_timer <= 0) parry_active = false;
+}
+
+var _do_parry = keyboard_check_pressed(ord("O")) || _btn_parry_pressed;
+
+if (_do_parry && room == RoomS && parry_cooldown_timer <= 0 && !parry_active)
+{
+    parry_active = true;
+    parry_timer = parry_duration;
+    parry_cooldown_timer = parry_cooldown;
+    show_debug_message("PARRY activado!");
 }
 
 // 9. Mecanica extra (Down Arrow D-Pad gamepad) ----------------------------
@@ -291,7 +302,6 @@ if (_btn_extra_pad && room == RoomT || room == RoomK || room == RoomS || room ==
     show_debug_message("MECANICA EXTRA activada (D-Pad Down)");
     // Agregar aqui la llamada a la mecanica extra
 }
-*/
 
 if (!is_attacking)
 {

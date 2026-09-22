@@ -96,3 +96,15 @@ current_weapon_index = 0;
 weapon_RoomL = "Slash";
 total_weapons = array_length(weapon_slots);
 
+// --- Parry (RoomS) ---
+parry_active = false;
+parry_duration = 14;        // cuántos frames dura la ventana de parry activa
+parry_timer = 0;
+parry_cooldown = 45;        // cooldown entre parries
+parry_cooldown_timer = 0;
+
+parry_charge = 0;           // 0 a parry_charge_max
+parry_charge_max = 100;
+parry_charge_per_hit = 20;  // cuánto llena la barra cada disparo parryeado
+charged_shot_ready = false;
+

@@ -129,6 +129,7 @@
     {"id":{"name":"RoomT","path":"rooms/RoomT/RoomT.yy",},},
     {"id":{"name":"RoomVEnd","path":"rooms/RoomVEnd/RoomVEnd.yy",},},
     {"id":{"name":"c_bomb_explode","path":"scripts/c_bomb_explode/c_bomb_explode.yy",},},
+    {"id":{"name":"c_player_register_parry","path":"scripts/c_player_register_parry/c_player_register_parry.yy",},},
     {"id":{"name":"c_player_take_damage","path":"scripts/c_player_take_damage/c_player_take_damage.yy",},},
     {"id":{"name":"c_unlock_weapon","path":"scripts/c_unlock_weapon/c_unlock_weapon.yy",},},
     {"id":{"name":"c_weapon_bomb","path":"scripts/c_weapon_bomb/c_weapon_bomb.yy",},},
