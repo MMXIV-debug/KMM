@@ -288,9 +288,8 @@ if (_btn_extra_pad && room == RoomT || room == RoomK || room == RoomS || room ==
     show_debug_message("MECANICA EXTRA activada (D-Pad Down)");
     // Agregar aqui la llamada a la mecanica extra
 }
+*/
 
-if (invuln_timer > 0)
-{
-    show_debug_message("INVULNERABLE: " + string(invuln_timer));
-}
+if (room == RoomL) sprite_index = s_player_2
+else if (room == RoomS) sprite_index = s_player_3
 
