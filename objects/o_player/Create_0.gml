@@ -55,6 +55,8 @@ is_dead = false;
 deaths = 0;
 invuln_duration = 60;
 invuln_timer = 0;
+is_attacking = false;
+dash_iframe_extra = 15; // frames extra de i-frames al terminar el dash (~0.1s a 60fps)
 
 pending_weapon = "";
 

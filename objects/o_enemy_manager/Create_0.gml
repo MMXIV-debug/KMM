@@ -1,4 +1,6 @@
 
+spawn_sides = []; // ["left","top"] lo define la instancia del spawner
+
 enemy_type  = o_enemy_fast;   // fallback si no se define spawn_types
 spawn_types = [];             // si lo llenás desde la room, elige al azar
 

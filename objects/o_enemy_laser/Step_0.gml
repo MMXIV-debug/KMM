@@ -1,41 +1,41 @@
-// Inherit the parent event
 event_inherited();
 
-switch(state)
+switch (state)
 {
-	case "enter":
-		if (x > target_x)
-        {
-            x -= vSpeed;
-        }
-        else
+    case "enter":
+        var _dir = point_direction(x, y, target_x, target_y);
+        x += lengthdir_x(enter_speed, _dir);
+        y += lengthdir_y(enter_speed, _dir);
+
+        if (point_distance(x, y, target_x, target_y) <= enter_speed)
         {
             x = target_x;
-            state = "fight";
-            alarm[1] = fight_t;
+            y = target_y;
+            state = "idle";
         }
-		break;
+        break;
+
     case "idle":
         idle_timer--;
-         if (idle_timer <= 0)
+        if (idle_timer <= 0)
         {
-            state     = "aiming";
+            state = "aiming";
             aim_timer = aim_time;
-            fire_direction = point_direction(x, y, o_player.x, o_player.y);
+            if (instance_exists(o_player))
+                fire_direction = point_direction(x, y, o_player.x, o_player.y);
         }
         break;
 
     case "aiming":
         aim_timer--;
-        // sigue al player mientras apunta
         if (instance_exists(o_player))
             fire_direction = point_direction(x, y, o_player.x, o_player.y);
 
         if (aim_timer <= 0)
         {
-            state          = "firing";
+            state = "firing";
             laser_duration = 120;
-            tick_timer     = 0;
+            tick_timer = 0;
         }
         break;
 
@@ -46,7 +46,6 @@ switch(state)
         if (tick_timer <= 0)
         {
             tick_timer = tick_interval;
-
             if (collision_line(x, y, x + lengthdir_x(beam_length, fire_direction), y + lengthdir_y(beam_length, fire_direction), o_player, false, true))
             {
                 with (o_player)
@@ -58,17 +57,33 @@ switch(state)
 
         if (laser_duration <= 0)
         {
-            state = "cooldown";
-            idle_timer = 150;
+            shots_fired++;
+            if (shots_fired >= max_shots)
+            {
+                state = "leave";
+            }
+            else
+            {
+                state = "cooldown";
+                idle_timer = 50;
+            }
         }
         break;
 
     case "cooldown":
         idle_timer--;
-        if (idle_timer <= 0)
+        if (idle_timer <= 0) state = "idle";
+        break;
+
+    case "leave":
+        var _dir2 = point_direction(x, y, origin_x, origin_y);
+        x += lengthdir_x(leave_speed, _dir2);
+        y += lengthdir_y(leave_speed, _dir2);
+
+        if (x < -margin_offscreen || x > room_width + margin_offscreen
+        ||  y < -margin_offscreen || y > room_height + margin_offscreen)
         {
-            state = "idle";
-            idle_timer = 90;
+            instance_destroy();
         }
         break;
 }

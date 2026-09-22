@@ -121,6 +121,9 @@ if (_do_dash && dash_cooldown_timer <= 0 && dash_timer <= 0)
     }
     dash_timer = dash_duration;
     dash_cooldown_timer = dash_cooldown;
+
+    invuln_timer = max(invuln_timer, dash_duration + dash_iframe_extra);
+
     show_debug_message("DASH!");
 }
 
@@ -290,6 +293,9 @@ if (_btn_extra_pad && room == RoomT || room == RoomK || room == RoomS || room ==
 }
 */
 
-if (room == RoomL) sprite_index = s_player_2
-else if (room == RoomS) sprite_index = s_player_3
+if (!is_attacking)
+{
+    if (room == RoomL) sprite_index = s_player_2;
+    else if (room == RoomS) sprite_index = s_player_3;
+}
 
