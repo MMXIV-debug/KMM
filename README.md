@@ -555,40 +555,15 @@ o_bomb (detonación) → c_bomb_explode() → daña enemigos + jugador en radio
 
 El proyecto es un prototipo funcional y jugable con las siguientes características operativas:
 
-- ✅ Sistema de movimiento con dash, límites de pantalla y soporte dual teclado/gamepad
-- ✅ Sistema de combate en RoomK (Standard, Homing, Spread/Overdrive)
-- ✅ Sistema de combate en RoomL (Slash, Hook, Bomb) con desbloqueo progresivo
-- ✅ Jefe final con múltiples patrones de ataque por sala y sistema de vampirismo
-- ✅ Enemigos diferenciados por sala con comportamientos variados
-- ✅ Sistema de power-ups con lógica de cola para compatibilidad entre armas
-- ✅ HUD de corazones, cuenta regresiva del jefe y barra de vida del jefe
-- ✅ Sistema de spawners configurables por instancia
-- ✅ Portales de transición entre salas con desbloqueo por derrota del jefe
-- ✅ Soporte completo para gamepad Xbox One con detección automática
-- ⚠️ `RoomS` tiene enemigos y spawners funcionales, pero la sala está incompleta en comparación con RoomK y RoomL
-- ⚠️ `oL_power_boomerang` y `oL_power_spin` desbloquean armas en el inventario, pero no existe implementación de ataque para esas armas
-- ⚠️ El sistema de parry (`c_player_register_parry`, `c_weapon_bucket`) está implementado como scripts pero no conectado al flujo de juego
-- ⚠️ La pantalla de muerte del jugador (`is_dead`) tiene su UI comentada en el código
+-  Sistema de movimiento con dash, límites de pantalla y soporte dual teclado/gamepad
+-  Sistema de combate en RoomK (Standard, Homing, Spread/Overdrive)
+-  Sistema de combate en RoomL (Slash, Hook, Bomb) con desbloqueo progresivo
+-  Jefe final con múltiples patrones de ataque por sala y sistema de vampirismo
+-  Enemigos diferenciados por sala con comportamientos variados
+-  Sistema de power-ups con lógica de cola para compatibilidad entre armas
+-  HUD de corazones, cuenta regresiva del jefe y barra de vida del jefe
+-  Sistema de spawners configurables por instancia
+-  Portales de transición entre salas con desbloqueo por derrota del jefe
+-  Soporte completo para gamepad Xbox One con detección automática
 
 ---
-
-## 17. Funcionalidades pendientes
-
-Las siguientes características están definidas en el código (comentarios `// TODO`, código comentado o variables sin inicializar), pero aún no están completamente implementadas:
-
-| Funcionalidad | Estado | Ubicación |
-|---|---|---|
-| **Arma Boomerang** | Solo desbloqueo, sin lógica de ataque | `oL_power_boomerang`, `weapon_slots` |
-| **Arma Spin** | Solo desbloqueo, sin lógica de ataque | `oL_power_spin`, `weapon_slots` |
-| **Sistema de Parry / Absorber** | Script implementado, no conectado al jugador | `c_player_register_parry`, `RT` gamepad |
-| **Arma Bucket (cargada por parry)** | Script implementado, variables sin inicializar | `c_weapon_bucket`, `c_player_register_parry` |
-| **Poder Final del jugador** | Solo detectado por input, sin lógica | `Step_0.gml` (LT gamepad) |
-| **Mecánica extra (D-Pad ↓)** | Solo detectado por input, sin lógica | `Step_0.gml` |
-| **Pantalla de muerte** | UI comentada en `Draw_64.gml` | `o_player/Draw_64.gml` |
-| **Minions en RoomS** | Código comentado en el boss | `o_enemy_boss/Step_0.gml` |
-| **RoomT** | Referenciada en el código pero no definida como sala activa | Referencias en `Step_0.gml` del jugador |
-| **Título del menú** | Texto placeholder (`"Titulo PlaceHolder"`) | `o_menu_controller` |
-
----
-
-*Proyecto desarrollado con GameMaker. Para abrir el proyecto, utilizar el archivo `Top Down Shooter.yyp` desde GameMaker IDE.*
