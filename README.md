@@ -22,7 +22,6 @@ Proyecto de videojuego de acción desarrollado en **GameMaker** (lenguaje GML). 
 14. [Scripts globales](#14-scripts-globales)
 15. [Interacciones entre sistemas](#15-interacciones-entre-sistemas)
 16. [Estado actual del proyecto](#16-estado-actual-del-proyecto)
-17. [Funcionalidades pendientes](#17-funcionalidades-pendientes)
 
 ---
 
