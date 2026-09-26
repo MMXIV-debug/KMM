@@ -126,7 +126,6 @@
     {"id":{"name":"RoomK","path":"rooms/RoomK/RoomK.yy",},},
     {"id":{"name":"RoomL","path":"rooms/RoomL/RoomL.yy",},},
     {"id":{"name":"RoomS","path":"rooms/RoomS/RoomS.yy",},},
-    {"id":{"name":"RoomT","path":"rooms/RoomT/RoomT.yy",},},
     {"id":{"name":"RoomVEnd","path":"rooms/RoomVEnd/RoomVEnd.yy",},},
     {"id":{"name":"c_bomb_explode","path":"scripts/c_bomb_explode/c_bomb_explode.yy",},},
     {"id":{"name":"c_player_register_parry","path":"scripts/c_player_register_parry/c_player_register_parry.yy",},},
@@ -196,7 +195,6 @@
     {"roomId":{"name":"RoomL","path":"rooms/RoomL/RoomL.yy",},},
     {"roomId":{"name":"RoomS","path":"rooms/RoomS/RoomS.yy",},},
     {"roomId":{"name":"RoomVEnd","path":"rooms/RoomVEnd/RoomVEnd.yy",},},
-    {"roomId":{"name":"RoomT","path":"rooms/RoomT/RoomT.yy",},},
   ],
   "templateType":"game",
   "TextureGroups":[

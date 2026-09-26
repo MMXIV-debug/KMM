@@ -86,7 +86,7 @@ if (_pad_connected)
 }
 
 // Con esto se controla el facing
-if (room != RoomK && room != RoomS && room != RoomT)
+if (room != RoomK && room != RoomS)
 {
     if (dir_x > 0) facing = 1;
     else if (dir_x < 0) facing = -1;
@@ -198,7 +198,7 @@ if (_do_attack)
 	attack_timer = attack_cooldown;
 	canShoot = 0;
     }
-	else if (room == RoomK or room == RoomT)
+	else if (room == RoomK)
 	{
 		switch(weapon)
 	    {
@@ -231,7 +231,7 @@ if (_do_attack)
 	attack_timer = attack_cooldown;
 	canShoot = 0;
 	}
-	else if (room == RoomS || room == RoomT)
+	else if (room == RoomS)
 	{
 		switch(weapon)
 		{
@@ -297,7 +297,7 @@ if (_do_parry && room == RoomS && parry_cooldown_timer <= 0 && !parry_active)
 
 // 9. Mecanica extra (Down Arrow D-Pad gamepad) ----------------------------
 // TODO: conectar con la mecanica extra cuando este implementada
-if (_btn_extra_pad && room == RoomT || room == RoomK || room == RoomS || room == RoomL)
+if (_btn_extra_pad && room == RoomK || room == RoomS || room == RoomL)
 {
     show_debug_message("MECANICA EXTRA activada (D-Pad Down)");
     // Agregar aqui la llamada a la mecanica extra

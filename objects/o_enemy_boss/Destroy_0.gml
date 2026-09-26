@@ -20,7 +20,6 @@ else if (room == RoomL)
 
 else
 {
-    // Para otras salas (RoomT), enviar al jugador al final
     if (instance_exists(o_player))
     {
         o_player.alarm[11] = 4 * room_speed;
