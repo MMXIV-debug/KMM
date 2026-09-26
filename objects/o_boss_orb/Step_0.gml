@@ -1,20 +1,21 @@
-// Avanzar en la direccion asignada
-dist_traveled += speed;
-
-// Explotar al llegar a la distancia limite
-if (dist_traveled >= travel_dist)
+if (state == "flying")
 {
-    // Danar al jugador si esta en el radio
-    if (instance_exists(o_player))
+    dist_traveled += speed;
+
+    if (dist_traveled >= travel_dist)
     {
-        var d = point_distance(x, y, o_player.x, o_player.y);
-        if (d <= explode_radius)
+        speed = 0;
+        state = "boom";
+
+        if (instance_exists(o_player))
         {
-            with (o_player)
+            var d = point_distance(x, y, o_player.x, o_player.y);
+            if (d <= explode_radius)
             {
-                c_player_take_damage(other.dmg);
+                with (o_player) { c_player_take_damage(dmg); }
             }
         }
+
+        alarm[0] = 20; // dura el aviso visual antes de desaparecer
     }
-    instance_destroy();
 }

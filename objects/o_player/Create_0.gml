@@ -60,6 +60,7 @@ dash_iframe_extra = 15; // frames extra de i-frames al terminar el dash (~0.1s a
 
 pending_weapon = "";
 
+
 // Gamepad (Xbox One) --------------------------
 pad_num = -1;
 pad_dead_zone = 0.25; // Dead zone para el stick analogico
@@ -95,6 +96,7 @@ weapon_slots = ["Slash"];
 current_weapon_index = 0;
 weapon_RoomL = "Slash";
 total_weapons = array_length(weapon_slots);
+
 
 // --- Parry (RoomS) ---
 parry_active = false;

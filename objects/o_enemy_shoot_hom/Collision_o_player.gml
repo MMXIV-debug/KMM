@@ -4,7 +4,6 @@ if (room == RoomS && o_player.parry_active)
     instance_destroy();
     exit;
 }
-
 var damage_amount = dmg;
 
 with (o_player)

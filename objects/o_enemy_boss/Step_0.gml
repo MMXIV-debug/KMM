@@ -147,10 +147,22 @@ else if (instance_exists(o_player))
         // Tres fases rotativas: homing → laser → orbe
         if (shoot_phase == 0)
         {
-            var obj = instance_create_layer(x, y, "att", o_enemy_shoot_hom);
-            obj.direction = point_direction(x, y, o_player.x, o_player.y);
-            obj.speed     = 12;
-            shoot_timer   = 2 * room_speed;
+            var shots     = 10;   // cantidad de proyectiles
+            var spread    = 12;  // grados entre cada uno
+            var base_dir  = point_direction(x, y, o_player.x, o_player.y);
+
+            for (var i = 0; i < shots; i++)
+            {
+                var _dir = base_dir + (i - (shots - 1) / 2) * spread;
+                var obj  = instance_create_layer(x, y, "att", o_enemy_shoot_hom);
+                obj.direction    = _dir;
+                obj.image_angle  = _dir;
+	            obj.speed        = 20;  
+	            obj.image_xscale = 5;
+	            obj.image_yscale = 5;
+                obj.dmg          = 25;   // era 10
+            }
+            shoot_timer = 2 * room_speed;
         }
         else if (shoot_phase == 1)
         {
@@ -186,11 +198,11 @@ if (summon_timer >= summon_cd)
         instance_create_layer(room_width + 64, irandom_range(96, room_height - 96), "Instances", o_enemyL_fast);
         instance_create_layer(room_width + 64, irandom_range(96, room_height - 96), "Instances", o_enemyL_fast);
     }
-	/*else if (room == RoomS)
+	else if (room == RoomS)
 	{
-		instance_create_layer(room_width + 64, irandom_range(96, room_height - 96), "Instances", o_enemyS_fast);
-        instance_create_layer(room_width + 64, irandom_range(96, room_height - 96), "Instances", o_enemyS_fast);
-	}*/
+	    instance_create_layer(room_width + 64, irandom_range(96, room_height - 96), "Instances", o_enemyS_slow);
+	    instance_create_layer(room_width + 64, irandom_range(96, room_height - 96), "Instances", o_enemyS_slow);
+	}
 }
 
 // Consecuencia de la muerte del o_player

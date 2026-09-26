@@ -17,6 +17,12 @@ else if (room == RoomL)
 	port.target_room = RoomS;
 	port.alarm[0] = -1;
 }
+else if (room == RoomS)
+{
+    var port = instance_create_layer(x, y, "Instances", o_portal);
+    port.target_room = RoomVEnd;
+    port.alarm[0] = -1;
+}
 
 else
 {

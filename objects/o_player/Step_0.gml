@@ -180,9 +180,8 @@ var _do_attack = (keyboard_check_pressed(ord("J")) || _btn_attack_pad) && canSho
 
 if (_do_attack)
 {
-    if (room == RoomL)
-    {
-		switch (weapon_RoomL)
+	if (room == RoomL) 
+	{ switch (weapon_RoomL)
 		{
 			case "Slash":
 				c_weapon_slash();
@@ -198,8 +197,8 @@ if (_do_attack)
 	attack_timer = attack_cooldown;
 	canShoot = 0;
     }
-	else if (room == RoomK)
-	{
+	else if (room == RoomK) 
+	{ 
 		switch(weapon)
 	    {
 			//Armas de la RoomK
@@ -226,17 +225,19 @@ if (_do_attack)
 			case "Homing":
 				c_weapon_homing(powlvl);
 				break;
-		
 	    }
 	attack_timer = attack_cooldown;
 	canShoot = 0;
 	}
-	else if (room == RoomS)
-	{
+	else if (room == RoomS) 
+	{ 
 		switch(weapon)
 		{
 			case "bucket":
-				c_weapon_bucket(x, y, facing);
+				if (parry_charge >= 20)
+				{
+					c_weapon_bucket(x, y, facing);
+				}
 				break;
 		}
 	}
@@ -268,15 +269,7 @@ if (keyboard_check_pressed(ord("K")) || _btn_weapon_pad)
     }
 }
 
-// 7. Poder Final (LT gamepad) ----------------------------
-// TODO: conectar con la logica de poder final cuando este implementada
-if (_btn_final_pressed)
-{
-    show_debug_message("PODER FINAL activado (LT)");
-    // Agregar aqui la llamada al poder final del jugador
-}
-
-// 8. Parry / Absorber (O teclado, RT gamepad) ----------------------------
+// 7. Parry / Absorber (O teclado, RT gamepad) ----------------------------
 if (parry_cooldown_timer > 0) parry_cooldown_timer--;
 
 if (parry_timer > 0)
@@ -295,17 +288,9 @@ if (_do_parry && room == RoomS && parry_cooldown_timer <= 0 && !parry_active)
     show_debug_message("PARRY activado!");
 }
 
-// 9. Mecanica extra (Down Arrow D-Pad gamepad) ----------------------------
-// TODO: conectar con la mecanica extra cuando este implementada
-if (_btn_extra_pad && room == RoomK || room == RoomS || room == RoomL)
-{
-    show_debug_message("MECANICA EXTRA activada (D-Pad Down)");
-    // Agregar aqui la llamada a la mecanica extra
-}
 
 if (!is_attacking)
 {
     if (room == RoomL) sprite_index = s_player_2;
     else if (room == RoomS) sprite_index = s_player_3;
 }
-

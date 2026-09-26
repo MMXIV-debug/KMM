@@ -7,6 +7,11 @@ if (room == RoomL)
     sprite_index = s_final_boss_1;
 }
 
+if (room == RoomS)
+{
+	hpMax = 2500 * 2;
+	sprite_index = s_final_boss_2;
+}
 hp = hpMax;
 dmg = 20;
 
