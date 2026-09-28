@@ -362,7 +362,7 @@ El jefe es el encuentro culminante de cada sala y adapta su comportamiento segú
 |---|---|---|
 | `RoomK` | 250 | 20 |
 | `RoomL` | 2500 (sprite diferente: `s_final_boss_1`) | 20 |
-| `RoomS` | 250 | 20 |
+| `RoomS` | 5000 (sprite diferente: 's_final_boss_2') | 20 |
 
 ### Fases de movimiento
 
