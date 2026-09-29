@@ -1,51 +1,60 @@
-# KMM — Top Down Shooter
+﻿# 🎮 Top Down Shooter
 
-Proyecto de videojuego de acción desarrollado en **GameMaker** (lenguaje GML). Propone un modo de juego tipo shooter de desplazamiento horizontal con vista superior, organizado en múltiples niveles de dificultad creciente. El jugador enfrenta oleadas de enemigos con comportamientos diferenciados, acumula armas y potenciadores, y progresa a través de salas hasta llegar a una pantalla de fin de partida.
+> Proyecto de videojuego 2D top-down desarrollado en **GameMaker (GML)**. Presenta un jugador que atraviesa tres niveles de dificultad creciente, cada uno con su propio conjunto de armas, enemigos y un jefe final que escala en HP y ataques por sala.
 
 ---
 
-## Tabla de contenidos
+## Índice
 
 1. [Descripción general](#1-descripción-general)
-2. [Objetivo del proyecto](#2-objetivo-del-proyecto)
+2. [Flujo de juego](#2-flujo-de-juego)
 3. [Tecnologías y herramientas](#3-tecnologías-y-herramientas)
 4. [Estructura del proyecto](#4-estructura-del-proyecto)
-5. [Flujo de juego y salas](#5-flujo-de-juego-y-salas)
-6. [Controles](#6-controles)
-7. [Entidad del jugador](#7-entidad-del-jugador)
-8. [Sistema de armas](#8-sistema-de-armas)
-9. [Potenciadores (Power-Ups)](#9-potenciadores-power-ups)
-10. [Enemigos](#10-enemigos)
-11. [El jefe final (`o_enemy_boss`)](#11-el-jefe-final-o_enemy_boss)
-12. [Sistemas gestores](#12-sistemas-gestores)
-13. [Interfaz de usuario (HUD)](#13-interfaz-de-usuario-hud)
-14. [Scripts globales](#14-scripts-globales)
-15. [Interacciones entre sistemas](#15-interacciones-entre-sistemas)
-16. [Estado actual del proyecto](#16-estado-actual-del-proyecto)
+5. [Salas (Rooms)](#5-salas-rooms)
+6. [Jugador (o_player)](#6-jugador-o_player)
+7. [Sistema de armas](#7-sistema-de-armas)
+8. [Sistema de power-ups](#8-sistema-de-power-ups)
+9. [Enemigos por sala](#9-enemigos-por-sala)
+10. [Jefe final (o_enemy_boss)](#10-jefe-final-o_enemy_boss)
+11. [Sistema de portal y progresión](#11-sistema-de-portal-y-progresión)
+12. [Managers y objetos de control](#12-managers-y-objetos-de-control)
+13. [Sistema de audio (o_sound)](#13-sistema-de-audio-o_sound)
+14. [Rutas predefinidas (Paths)](#14-rutas-predefinidas-paths)
+15. [Scripts reutilizables](#15-scripts-reutilizables)
+16. [Sprites](#16-sprites)
+17. [Controles](#17-controles)
+18. [Variables globales](#18-variables-globales-relevantes)
 
 ---
 
 ## 1. Descripción general
 
-El juego es un shooter de desplazamiento horizontal con vista superior. El jugador controla a un personaje que se mueve libremente dentro del área de la sala y debe eliminar oleadas de enemigos que avanzan desde el lado derecho u otras direcciones según el nivel. A medida que progresa, el jugador desbloquea nuevas armas, recoge potenciadores y enfrenta jefes con patrones de ataque específicos para cada sala.
+Top Down Shooter es un juego de acción 2D en perspectiva cenital donde el jugador:
 
-El proyecto está organizado en **tres salas de combate principales**, cada una con su propio conjunto de enemigos, mecánicas de armas disponibles y comportamiento del jefe:
+- Navega tres salas de combate (`RoomK` → `RoomL` → `RoomS`) con dificultad y mecánicas distintas.
+- Enfrenta oleadas de enemigos que spawnean desde los bordes de la pantalla.
+- Acumula power-ups, desbloquea armas y activa habilidades especiales.
+- Combate un **jefe final** que aparece a los **60 segundos** de comenzar cada sala (con penalización de +15 seg por cada muerte).
+- Al derrotar al jefe, un portal lo transporta a la siguiente sala (o a la pantalla de fin si fue la última).
 
-| Sala | Tipo de jugabilidad | Mecánicas principales |
-|---|---|---|
-| `RoomK` | Shooter a distancia | Armas Standard, Spread (Overdrive) y Homing |
-| `RoomL` | Combate cuerpo a cuerpo / táctico | Armas Slash, Hook y Bomb con desbloqueo progresivo |
-| `RoomS` | Desafío final de combate | Enfrentamiento contra jefe de tres fases y enemigos avanzados |
+El juego lleva un contador global de muertes (`global.total_deaths`) y de pasadas completadas (`global.pass`) que persisten entre partidas de la misma sesión.
 
 ---
 
-## 2. Objetivo del proyecto
+## 2. Flujo de juego
 
-- Explorar y desarrollar mecánicas de juego propias inspiradas en géneros de acción tipo shooter.
-- Implementar un sistema de armas modular intercambiable por sala.
-- Diseñar enemigos con comportamientos variados y escalables en dificultad.
-- Construir un jefe final adaptable con patrones de ataque distintos según el escenario.
-- Integrar soporte completo para teclado y gamepad (Xbox One) de manera simultánea.
+```
+RoomIMenu
+    │ (cualquier input)
+    ▼
+RoomJTutorial
+    │ (cualquier input)
+    ▼
+RoomK ──[boss derrotado]──► portal ──► RoomL ──[boss derrotado]──► portal ──► RoomS ──[boss derrotado]──► portal ──► RoomVEnd
+                                                                                                                            │ (canción termina + cualquier input)
+                                                                                                                            ▼
+                                                                                                                      RoomIMenu (+1 a global.pass)
+```
 
 ---
 
@@ -67,10 +76,10 @@ El proyecto está organizado en **tres salas de combate principales**, cada una 
 ```
 Top Down Shooter/
 ├── objects/          # Todos los objetos del juego (jugador, enemigos, proyectiles, managers)
-├── scripts/          # Scripts reutilizables (armas, daño, desbloqueos)
+├── scripts/          # Scripts reutilizables (armas, daño, desbloqueos, parry)
 ├── rooms/            # Salas del juego (menú, tutorial, niveles, fin)
 ├── sprites/          # Gráficos del jugador, enemigos, fondos, UI
-├── sounds/           # Recursos de audio
+├── sounds/           # Recursos de audio (música por sala)
 ├── paths/            # Rutas predefinidas para movimiento de enemigos y power-ups
 ├── animcurves/       # Curvas de animación
 ├── datafiles/        # Archivos de datos adicionales
@@ -83,468 +92,452 @@ Top Down Shooter/
 | Categoría | Objetos |
 |---|---|
 | **Jugador** | `o_player` |
-| **Jefe** | `o_enemy_boss` |
-| **Enemigos (RoomK)** | `o_enemy_fast`, `o_enemy_slow`, `o_enemy_laser`, `o_enemy_pow` |
-| **Enemigos (RoomL)** | `o_enemyL_fast`, `o_enemyL_slow` |
-| **Enemigos (RoomS)** | `o_enemyS_slow`, `o_enemyS_spread`, `o_enemyS_path`, `o_enemyS_orb` |
-| **Proyectiles enemigos** | `o_enemy_shoot_hom`, `o_boss_orb` |
-| **Armas del jugador** | `o_standard_slash`, `o_hook_shot`, `o_bomb`, `o_homing_shot`, `o_standard_shot`, `o_spread_shot` (y variantes nivel 2/3) |
-| **Power-Ups** | `o_power_plus`, `o_power_homing`, `o_power_overdrive` |
-| **Gestores** | `o_game_manager`, `o_enemy_manager` |
-| **Navegación** | `o_portal`, `o_menu_controller`, `o_tutorial_controller` |
+| **Managers** | `o_game_manager`, `o_enemy_manager`, `o_menu_controller`, `o_tutorial_controller`, `o_sound` |
+| **Boss** | `o_enemy_boss` |
+| **Enemigos RoomK** | `o_enemy_slow`, `o_enemy_fast`, `o_enemy_pow`, `o_enemy_laser` |
+| **Enemigos RoomL** | `o_enemyL_slow`, `o_enemyL_fast` |
+| **Enemigos RoomS** | `o_enemyS_slow`, `o_enemyS_path`, `o_enemyS_spread`, `o_enemyS_orb`, `o_enemyS_path_trail` |
+| **Clase padre** | `o_enemy_body`, `o_enemy` |
+| **Proyectiles jugador** | `o_standard_shot/_2/_3`, `o_homing_shot/_2/_3`, `o_spread_shot/_2/_3`, `o_standard_slash`, `o_hook_shot`, `o_bomb`, `o_shot` |
+| **Proyectiles enemigo** | `o_enemy_att`, `o_enemy_shoot_hom`, `o_boss_orb`, `o_att` |
+| **Power-ups** | `o_power_plus`, `o_power_homing`, `o_power_overdrive`, `oL_power_boomerang`, `oL_power_spin`, `o_pwr` |
+| **Otros** | `o_portal`, `o_ending_title`, `o_kirby_ending_umbrella` |
 
-### Scripts
+---
 
-| Script | Función |
+## 5. Salas (Rooms)
+
+| Sala | Descripción |
 |---|---|
-| `c_weapon_standard` | Disparo estándar frontal (3 niveles de daño) |
-| `c_weapon_spread` | Disparo en cono de 120° (10 proyectiles, 3 niveles) |
-| `c_weapon_homing` | Misil teledirigido (3 niveles de daño) |
-| `c_weapon_slash` | Golpe cuerpo a cuerpo frontal |
-| `c_weapon_hook` | Látigo energético con knockback |
-| `c_weapon_bomb` | Bomba adherente de dos pulsaciones |
-| `c_player_take_damage` | Aplicar daño al jugador con invulnerabilidad |
-| `c_bomb_explode` | Explosión radial con daño a enemigos y al jugador |
-| `c_unlock_weapon` | Agregar un arma al inventario del jugador (sin duplicados) |
+| `RoomIMenu` | Menú principal. Cualquier input inicia la partida (resetea `global.total_deaths`). |
+| `RoomJTutorial` | Tutorial que muestra los controles. Cualquier input avanza a `RoomK`. |
+| `RoomK` | **Nivel 1** — Armas de disparo horizontal (Standard, Spread, Homing). Boss con 1000 HP. |
+| `RoomL` | **Nivel 2** — Armas cuerpo a cuerpo y de área (Slash, Hook, Bomb). Boss con 2500 HP + láser alternado. |
+| `RoomS` | **Nivel 3** — Mecánica de parry y disparo de carga (Bucket). Boss con 3500 HP + 3 fases rotativas. |
+| `RoomVEnd` | Pantalla de fin con animación de Kirby y créditos. Retorna al menú al terminar la canción. |
 
 ---
 
-## 5. Flujo de juego y salas
+## 6. Jugador (`o_player`)
 
-El juego sigue una secuencia lineal de salas:
-
-```
-RoomIMenu → RoomJTutorial → RoomK → RoomL → RoomS → RoomVEnd
-```
-
-### `RoomIMenu` — Menú principal
-Pantalla de inicio con dos botones: **JUGAR** y **SALIR**. Al pulsar JUGAR por primera vez, navega a `RoomJTutorial`. El fondo usa el sprite `s_fondo_menu` y el título `s_titulo`.
-
-### `RoomJTutorial` — Tutorial
-Sala de introducción controlada por `o_tutorial_controller`. Al presionar cualquier tecla, avanza automáticamente a `RoomK`.
-
-### `RoomK` — Primera sala de combate
-- **Mecánica de armas:** shooter a distancia con armas Standard, Homing y Spread (Overdrive temporal).
-- **Temporizador de jefe:** el jefe aparece exactamente al minuto de juego (`boss_time = 60 * room_speed`). Cada muerte del jugador añade 15 segundos adicionales de espera.
-- **Antes del jefe:** el `o_game_manager` elimina todos los spawners de enemigos comunes cuando llega el momento.
-- **Restricción especial:** si el jugador porta el arma Homing en el momento en que aparece el jefe, esta se reemplaza automáticamente por Standard (nivel 1).
-- **Al vencer al jefe:** aparece un portal permanente hacia `RoomL`.
-
-### `RoomL` — Segunda sala de combate
-- **Mecánica de armas:** combate físico y táctico (Slash, Hook, Bomb). El jugador siempre empieza con Slash al ingresar.
-- **Desbloqueo de Gancho:** al acumular 5 kills en esta sala, se desbloquea automáticamente el arma Hook.
-- **Desbloqueo de Bomba:** al eliminar al enemigo `o_enemy_laser`, se desbloquea el arma Bomb.
-- **Temporizador de jefe:** igual que en RoomK (1 minuto + penalización por muertes).
-- **Al vencer al jefe:** aparece un portal permanente hacia `RoomS`.
-
-### `RoomS` — Tercera sala de combate
-- Enemigos exclusivos: `o_enemyS_slow` (tirador en estrella), `o_enemyS_spread` (lanzador de orbes), `o_enemyS_path` (línea de daño en trayectoria cruzada).
-- El jefe aquí rota tres fases de ataque: homing → láser → orbe explosivo.
-- La sala cuenta con spawners independientes para cada tipo de enemigo.
-- **Al vencer al jefe:** tras una breve pausa de victoria, el juego inicia la transición hacia la sala final.
-
-### `RoomVEnd` — Pantalla de fin
-Pantalla de victoria final a la que se accede tras superar el combate en `RoomS`. Concluye la partida exitosamente.
-
----
-
-## 6. Controles
-
-El juego soporta **teclado y gamepad Xbox One de forma simultánea**. Si hay un gamepad conectado en los slots 0–3, se detecta automáticamente y se configura con una zona muerta del 25% en el stick analógico.
-
-| Acción | Teclado | Xbox One |
-|---|---|---|
-| Movimiento | `W` `A` `S` `D` | Left Stick (analógico) |
-| Ataque / Disparar | `J` | `B` |
-| Dash | `I` | `RB` (bumper derecho) |
-| Cambiar arma | `K` | `D-Pad →` |
-
-**Notas técnicas:**
-- El Left Stick tiene **prioridad sobre WASD** cuando produce input analógico activo.
-- El movimiento produce un vector normalizado para evitar velocidad mayor en diagonales.
-
----
-
-## 7. Entidad del jugador
-
-### Estadísticas base
+### Stats base
 
 | Variable | Valor | Descripción |
 |---|---|---|
-| `max_hp` | 100 | Puntos de vida máximos |
-| `total_hearts` | 6 | Corazones mostrados en el HUD |
-| `move_speed` | 9 px/step | Velocidad de movimiento |
-| `dash_speed` | 20 px/step | Velocidad durante el dash |
-| `dash_duration` | 12 steps | Duración del dash (~0.2 s) |
-| `dash_cooldown` | 30 steps | Espera entre dashes (~0.5 s) |
-| `attack_cooldown` | 20 steps | Cadencia de ataque base |
-| `invuln_duration` | 60 steps | Invulnerabilidad post-impacto (1 s) |
-| `respawnTime` | 1 * room_speed | Tiempo de reaparición tras morir |
-| `powlvl` | 1 (máx. 3) | Nivel de poder del arma |
+| `move_speed` | 9 | Velocidad de movimiento normal |
+| `max_hp` | 100 | Vida máxima |
+| `total_hearts` | 6 | Corazones en la UI (cada uno ≈ 16.67 HP) |
+| `dash_speed` | 20 | Velocidad durante el dash |
+| `dash_duration` | 12 frames | Duración del dash |
+| `dash_cooldown` | 30 frames | Cooldown entre dashes |
+| `invuln_duration` | 60 frames | Iframes tras recibir daño |
+| `dash_iframe_extra` | 15 frames | Iframes extra al terminar el dash |
+| `attack_cooldown` | 20 frames | Cooldown de ataque general |
+| `reloadSpeed` | 15 frames | Cooldown de disparo (alarma) |
+| `powlvl` | 1 (máx 3) | Nivel de poder actual |
+| `powerup_duration` | 600 frames (10s) | Duración de power-ups |
 
-### Ciclo de vida y respawn
+### Sistema de vidas y respawn
 
-Cuando el jugador recibe daño suficiente para llegar a 0 HP:
-1. Se activa la bandera `is_dead = true` y se incrementa el contador `deaths`.
-2. La entidad se desplaza fuera de la cámara (`y -= 2000`) para desaparecer visualmente.
-3. Se activa `alarm[1]` con el tiempo de reaparición.
-4. Al activarse la alarma, el jugador regresa a la posición de inicio `(64, 576)`, recupera todo el HP y vuelve al nivel de poder 1.
+- El HUD muestra **6 corazones** (lleno / medio / vacío) según el HP actual.
+- Al llegar a 0 HP: `is_dead = true`, el jugador se oculta (mueve a `y - 2000`) y `alarm[1]` activa el **respawn en 1 segundo**.
+- Al respawnear: HP restaurado, `powlvl` reiniciado a 1, posición en (64, 576).
+- Cada muerte suma 1 a `deaths` (local) y a `global.total_deaths`.
+- Cada muerte activa penalización en el boss: `boss_time += 15 * room_speed` (+15 segundos).
 
-### Invulnerabilidad
+### Sistema de dash
 
-Cada vez que el jugador recibe daño, se activa un período de invulnerabilidad de 60 steps durante el cual ningún impacto posterior tiene efecto. Durante este tiempo el sprite parpadea utilizando blending aditivo (`bm_add`), produciendo un efecto de destello visual.
+- `I` (teclado) / `RB` (gamepad) activan el dash.
+- Si no hay dirección de movimiento activa, el dash se realiza hacia **arriba** por defecto.
+- Durante el dash: el jugador es **invulnerable** (`invuln_timer = dash_duration + dash_iframe_extra`).
+- Cooldown de 30 frames entre dashes. El jugador no puede morir durante un dash.
 
-### Facing (orientación del sprite)
+### Sistema de parry (exclusivo `RoomS`)
 
-El jugador tiene una variable `facing` (1 = derecha, −1 = izquierda) que voltea el sprite horizontalmente (`image_xscale = facing`). En `RoomK` y `RoomS`, el facing permanece fijo orientado hacia la derecha, mientras que en `RoomL` y en el tutorial se actualiza dinámicamente según la dirección de movimiento horizontal del jugador.
-
-### Sprites por sala
-
-| Sala | Sprite en reposo | Sprite de ataque |
+| Variable | Valor | Descripción |
 |---|---|---|
-| `RoomK` | `s_player_1` | `s_att_sword` |
-| `RoomL` | `s_player_2` | `s_att_sword` |
-| `RoomS` | `s_player_3` | `s_player_3` |
+| `parry_duration` | 14 frames | Ventana activa de parry |
+| `parry_cooldown` | 45 frames | Cooldown entre parries |
+| `parry_charge_max` | 100 | Carga máxima de la barra |
+| `parry_charge_per_hit` | 20 | Carga por proyectil absorbido |
 
-### Límites de sala
+- `O` (teclado) / `RT` (gamepad) activan el parry.
+- Cada proyectil enemigo absorbido durante la ventana activa añade `+20` a la barra de carga.
+- Al llegar al máximo (`charged_shot_ready = true`) → disponible el disparo de balde (`c_weapon_bucket`).
+- La barra se dibuja en la GUI: fondo oscuro → relleno rosa (en carga) → dorado (lista para disparar).
+- Muestra texto: `"X/100"` o `"¡DISPARO CARGADO LISTO! (J)"`.
 
-El jugador no puede salir de los límites de la sala. Cada step se verifican los cuatro bordes del bounding box y la posición se corrige para mantenerlo dentro del área de juego.
+### Facing y sprites por sala
 
----
+| Sala | Sprite |
+|---|---|
+| `RoomK` | `s_player_1` |
+| `RoomL` | `s_player_2` |
+| `RoomS` | `s_player_3` |
 
-## 8. Sistema de armas
-
-### Armas en `RoomK`
-
-En esta sala el jugador usa el sistema de arma activa (`weapon`), que puede ser:
-
-#### Standard
-Dispara un proyectil recto hacia la derecha. El tipo de proyectil varía según `powlvl`:
-- Nivel 1: `o_standard_shot` — 10 de daño, velocidad 15 px/step
-- Nivel 2: `o_standard_shot_2` — 20 de daño
-- Nivel 3: `o_standard_shot_3` — 30 de daño
-
-#### Homing (misil teledirigido)
-Dispara un proyectil que persigue al enemigo más cercano. Cada step calcula la dirección al objetivo con `instance_nearest` y ajusta gradualmente la trayectoria con `turn_rate = 6` grados por step, produciendo un giro suave. El daño varía por nivel de poder: 10 / 20 / 30.
-
-Si el jugador recibe daño mientras tiene Homing equipada, el arma se degrada automáticamente a Standard.
-
-#### Spread — Overdrive temporal
-Se activa al recoger el power-up `o_power_overdrive`. Dispara 10 proyectiles en un cono de 120° (de −60° a +60°). Solo están disponibles **5 disparos** (`overdrive_shots_left = 5`). Al agotarse regresa automáticamente al arma anterior (ya sea Standard o Homing, según lo que estuviera en `pending_weapon`).
-
-El daño varía por nivel: 10 / 20 / 30 por proyectil.
-
-### Armas en `RoomL`
-
-En esta sala el jugador gestiona un **inventario de armas** almacenado en el array `weapon_slots`. Empieza únicamente con `["Slash"]` y desbloquea más durante la partida. El cambio de arma es cíclico (tecla `K` o D-Pad →) y la variable `weapon_RoomL` indica el arma activa.
-
-#### Slash
-Genera una instancia de `o_standard_slash` a 80 píxeles por delante del jugador (ajustado por `facing`). El hitbox dura 15 steps y aplica 15 de daño. Utiliza una `ds_list` interna para garantizar que cada enemigo solo reciba el daño una vez por activación, incluso si permanece en contacto durante varios frames.
-
-#### Hook (Gancho)
-Genera `o_hook_shot`, un látigo de energía que:
-1. Se extiende 340 px a `extend_speed = 25` px/step desde la posición del jugador.
-2. Al alcanzar el máximo, se retrae a `retract_speed = 30` px/step.
-3. Detecta colisiones con `collision_line_list` a lo largo de toda su línea.
-4. Aplica 12 de daño por enemigo tocado y los empuja hacia el jugador con un knockback de 24 px.
-5. Cada enemigo solo es golpeado una vez por disparo (lista `hit_list`).
-
-**Desbloqueo:** al acumular 5 kills en `RoomL`.
-
-#### Bomb (Bomba adherente)
-Funciona con dos pulsaciones del botón de ataque:
-1. **Primera pulsación:** lanza `o_bomb` horizontalmente a velocidad 20 px/step. Si toca a un enemigo antes de recorrer 420 px, se adhiere a él (estado `"stuck"`) siguiendo sus coordenadas mediante un offset relativo (`off_x`, `off_y`). Si no impacta, queda flotando en estado `"idle"`.
-2. **Segunda pulsación:** detona la bomba. Llama a `c_bomb_explode()` con un radio de 160 px y 60 de daño. La explosión afecta a todos los enemigos en el radio, incluyendo al jefe. **La explosión también puede dañar al jugador** si está dentro del radio (15 de daño fijo).
-
-**Advertencia:** si el objetivo al que está adherida la bomba muere antes de la detonación, la bomba se destruye automáticamente.
-
-**Desbloqueo:** al eliminar al enemigo `o_enemy_laser` en RoomL.
-
+El `facing` (1 = derecha, -1 = izquierda) controla el `image_xscale`. En `RoomK` y `RoomS` el facing no cambia con el movimiento.
 
 ---
 
-## 9. Potenciadores (Power-Ups)
+## 7. Sistema de armas
 
-Los power-ups se mueven horizontalmente usando el objeto padre `o_pwr` (velocidad `x -= vSpeed = 5`). Al colisionar con el jugador, ejecutan su efecto y se destruyen.
+El arma activa depende de la sala actual. En `RoomL` existe un inventario rotativo de armas desbloqueadas.
 
-### `o_power_plus` — Subida de nivel
-Incrementa `powlvl` en 1, hasta el máximo de 3. Mejora el daño de Standard, Homing y Spread.
+### Armas de `RoomK`
 
-### `o_power_homing` — Arma Homing
-Cambia el arma activa del jugador a `"Homing"`. Si el jugador está en modo Overdrive (Spread), el arma Homing queda en cola (`pending_weapon = "Homing"`) y se aplica al terminar los disparos de Overdrive.
-
-### `o_power_overdrive` — Modo Overdrive (Spread)
-Activa el arma Spread temporalmente con 5 cargas. Si el jugador tenía Homing, la guarda en `pending_weapon`. El arma regresa a la anterior al agotar las cargas.
-
-### Obtención de power-ups
-
-| Fuente | Power-Up(s) posibles | Probabilidades |
+| Arma | Script | Descripción |
 |---|---|---|
-| `o_enemy_pow` (al morir por HP) | `o_power_plus` (45%), `o_power_homing` (25%), `o_power_overdrive` (12%), ninguno (18%) | Aleatorio con `irandom_range` |
-| `o_enemy_slow` (al morir por HP) | `o_power_homing` | 5% de probabilidad (`drop_chance = 5`) |
+| **Standard** | `c_weapon_standard(powlvl)` | Disparo recto. 3 niveles de poder (`o_standard_shot`, `_2`, `_3`). |
+| **Spread** (Overdrive) | `c_weapon_spread(powlvl)` | Abanico de 10 proyectiles entre -60° y +60°. Dura **5 disparos** y revierte a Standard (o Homing si estaba en cola). |
+| **Homing** | `c_weapon_homing(powlvl)` | Proyectil teledirigido al enemigo más cercano. 3 niveles. **Se pierde al recibir daño.** |
+
+> **Nota:** Al aparecer el boss en `RoomK`, si el jugador tenía Homing activo, el arma se resetea a Standard automáticamente.
+
+### Armas de `RoomL` (inventario rotativo)
+
+Gestionadas por `weapon_slots[]`. Se cambia con `K` / D-Pad Derecho.
+
+| Arma | Script | Desbloqueo | Descripción |
+|---|---|---|---|
+| **Slash** | `c_weapon_slash()` | Disponible desde el inicio | Espadazo que crea un hitbox (`o_standard_slash`) a 80px del jugador según el facing. Animación con `s_att_sword`. |
+| **Hook** | `c_weapon_hook()` | 5 kills en `RoomL` | Látigo (`o_hook_shot`) que se extiende 340px, luego retrae, aplicando knockback de 24px a los enemigos golpeados. |
+| **Bomb** | `c_weapon_bomb()` | Matar un `o_enemy_laser` | 1er toque: lanza bomba (`o_bomb`). 2do toque: la detona. Explosión daña enemigos **y** al jugador dentro del radio. |
+| **Boomerang** | *(en progreso)* | Power-up `oL_power_boomerang` | Se desbloquea recogiendo el power-up correspondiente en sala L. |
+| **Spin** | *(en progreso)* | Power-up `oL_power_spin` | Se desbloquea recogiendo el power-up correspondiente en sala L. |
+
+### Armas de `RoomS`
+
+| Arma | Script | Descripción |
+|---|---|---|
+| **Bucket** (Balde) | `c_weapon_bucket(x, y, facing)` | Dispara 10 proyectiles en abanico de 35° ligeramente elevado. Daño y tamaño escalan con la carga del parry (`_charge_ratio`). **Consume toda la barra.** Requiere mínimo 20 de carga. |
 
 ---
 
-## 10. Enemigos
+## 8. Sistema de power-ups
 
-Todos los enemigos que pueden recibir daño son instancias hijas de `o_enemy_body`. Este objeto padre centraliza:
-- La recepción de daño por colisión con `o_att` y `o_standard_slash`.
-- La destrucción automática cuando `hp <= 0`.
-- La notificación al spawner cuando muere (`spawner_id.alive_count--`).
-- El incremento del contador global `kills_since_last_portal`.
-- La lógica de desbloqueo de armas al morir (Bomb en RoomL, Hook tras 5 kills en RoomL).
+### Power-ups de `RoomK` (soltados por `o_enemy_pow` al morir)
+
+| Power-up | Probabilidad | Efecto |
+|---|---|---|
+| `o_power_plus` | 45% | Aumenta `powlvl` en 1 (máx 3). |
+| `o_power_homing` | 25% | Cambia el arma a Homing. Si hay Overdrive activo, queda en `pending_weapon`. |
+| `o_power_overdrive` | 12% | Activa Spread por 5 disparos. Si había Homing, lo encola en `pending_weapon`. |
+| *(nada)* | 18% | Sin drop. |
+
+### Power-ups de `RoomL` (en sala)
+
+| Power-up | Efecto |
+|---|---|
+| `oL_power_boomerang` | Desbloquea el arma "Boomerang" en `weapon_slots[]`. |
+| `oL_power_spin` | Desbloquea el arma "Spin" en `weapon_slots[]`. |
+
+---
+
+## 9. Enemigos por sala
+
+### Clase padre: `o_enemy_body`
+
+Todos los enemigos heredan de `o_enemy_body`. Al destruirse cualquier enemigo que lo tenga como padre:
+- Avisa al `o_enemy_manager` y libera un slot (`alive_count--`).
+- Incrementa `global.kills_since_last_portal`.
+- Ejecuta lógica de desbloqueo específica de la sala.
 
 ### Enemigos de `RoomK`
 
-#### `o_enemy_fast` — Kamikaze
-Enemigo suicida de alto daño y velocidad. Selecciona aleatoriamente una de tres rutas predefinidas (`path_kamikaze_1`, `path_kamikaze_2`, `path_kamikaze_3`) y las recorre a velocidad 15 px/step. Al colisionar con el jugador inflige 30 de daño y se destruye. HP: 10.
-
-#### `o_enemy_slow` — Tirador táctico
-Opera con una máquina de tres estados:
-1. **`enter`:** avanza desde el borde derecho hasta una posición objetivo (`room_width - 520`) a velocidad 5 px/step.
-2. **`fight`:** dispara misiles teledirigidos (`o_enemy_shoot_hom`, velocidad 15) cada ~1.5 segundos (`reloadSpeed = 90`). Permanece en combate durante 6 segundos (`fight_t = 6 * room_speed`).
-3. **`escape`:** se retira hacia la izquierda con aceleración progresiva (de 5 hasta 9 px/step), hasta salir de pantalla. HP: 30, daño por contacto: 10.
-
-Al morir por HP tiene un 5% de probabilidad de soltar `o_power_homing`.
-
-#### `o_enemy_laser` — Artillería de rayo
-Enemigo estático que opera en cuatro estados cíclicos:
-1. **`idle`:** espera 1.5 segundos antes de iniciar la secuencia de ataque.
-2. **`aiming`:** durante 0.75 segundos traza una guía punteada roja intermitente (largo 1600 px) hacia el jugador, actualizando la dirección en tiempo real.
-3. **`firing`:** activa el rayo azul (largo 3000 px) durante 2 segundos. Cada 0.25 segundos verifica con `collision_line` si el rayo toca al jugador e inflige 5 de daño por tick.
-4. **`cooldown`:** espera 2.5 segundos antes de reiniciar el ciclo.
-
-HP: 25. Al ser eliminado, desbloquea el arma **Bomb** para el jugador en RoomL.
-
-#### `o_enemy_pow` — Proveedor de power-ups
-Enemigo de baja amenaza (HP: 20, daño: 10) que se mueve siguiendo una de dos rutas predefinidas (`path_pow_1`, `path_pow_2`) con un efecto de balanceo visual (oscilación del ángulo de imagen mediante `sin(tiempo)`). Al morir por daño, ejecuta un cálculo probabilístico para soltar un power-up según las probabilidades indicadas en la sección anterior.
+| Objeto | Descripción | HP | Daño |
+|---|---|---|---|
+| `o_enemy_slow` | Entra desde la derecha hacia el jugador y dispara proyectiles frontales. Drop chance 5%. | 30 | 10 |
+| `o_enemy_fast` | Kamikaze veloz que embiste al jugador. Sin disparo. | — | colisión |
+| `o_enemy_pow` | Igual a `o_enemy_slow` pero con sistema de drop de power-ups. | 30 | 10 |
+| `o_enemy_laser` | Entra desde un borde, apunta (línea punteada 45 frames) y dispara rayo (120 frames). Repite 2 veces y se retira. **Al morir desbloquea la Bomba en RoomL.** | 25 | 5/tick |
 
 ### Enemigos de `RoomL`
 
-#### `o_enemyL_fast` — Kamikaze (variante RoomL)
-Hereda el comportamiento de `o_enemy_fast`. Tiene su propio tipo de objeto para diferenciarse visualmente y en los spawners de RoomL. No tiene código personalizado adicional en sus eventos.
-
-#### `o_enemyL_slow` — Tirador táctico (variante RoomL)
-Hereda el comportamiento completo de `o_enemy_slow`. La única diferencia es que `drop_chance = 0`, por lo que nunca suelta power-ups.
+| Objeto | Descripción |
+|---|---|
+| `o_enemyL_slow` | Equivalente lento para la sala L. |
+| `o_enemyL_fast` | Equivalente rápido para la sala L. También invocado por el boss. |
 
 ### Enemigos de `RoomS`
 
-#### `o_enemyS_slow` — Tirador en estrella
-Variante del tirador táctico con comportamiento modificado:
-1. **`enter`:** avanza hasta su posición objetivo.
-2. **`fight`:** dispara 10 proyectiles en ráfaga radial distribuidos a 360° (separados 36° entre sí), con un desplazamiento angular aleatorio de hasta 35° por ráfaga. Velocidad por proyectil: 6 px/step.
-3. **`escape`:** se retira tras completar exactamente 3 ráfagas (`max_shots = 3`). No usa el temporizador de huida del padre; lo controla por conteo de disparos.
-
-No suelta power-ups (`drop_chance = 0`).
-
-#### `o_enemyS_spread` — Lanzador de orbes
-Avanza desde fuera de pantalla hasta una posición objetivo y entra en estado de combate (`fight`). Dispara proyectiles de tipo `o_enemyS_orb` apuntando al jugador con recarga de 100 steps. HP: 20, daño por contacto: 10.
-
-**`o_enemyS_orb`:** proyectil que viaja hasta 450 px, luego se detiene (estado `"armed"`) y tras 1.5 segundos explota con radio de 90 px y 20 de daño. La explosión puede dañar al jugador si está en el radio.
-
-#### `o_enemyS_path` — Línea de daño cruzado
-Enemigo que atraviesa toda la pantalla de forma lineal. Al crearse, elige aleatoriamente uno de tres patrones de desplazamiento:
-- **Horizontal:** de izquierda a derecha o de derecha a izquierda.
-- **Vertical:** de arriba a abajo o de abajo a arriba.
-- **Diagonal:** uno de cuatro ángulos de esquina.
-
-Deja un **rastro de daño visual** (línea punteada roja semitransparente) que permanece activo durante 3 segundos tras el paso del enemigo. Tanto el contacto directo (20 de daño) como el rastro (8 de daño cada 0.25 s) pueden herir al jugador. Además, mientras se desplaza, dispara misiles teledirigidos cada 70 steps con recarga automática. HP: 40.
+| Objeto | Descripción | HP | Daño |
+|---|---|---|---|
+| `o_enemyS_slow` | Versión lenta del nivel S. Invocado también por el boss. | — | — |
+| `o_enemyS_path` | Atraviesa la pantalla en línea recta (horizontal / vertical / diagonal) desde cualquier borde. Deja un **rastro peligroso** (8 dmg/0.25s) y dispara proyectiles teledirigidos mientras se mueve. | 40 | 20 + rastro 8/tick |
+| `o_enemyS_spread` | Entra desde el borde y dispara un abanico de proyectiles al llegar a su posición objetivo. | 20 | 10 |
+| `o_enemyS_orb` | Proyectil-enemigo: vuela hacia el jugador 450px, se detiene, explota tras 1.5s en radio de 90px. | — | 20 (área) |
+| `o_enemyS_path_trail` | Rastro visual/dañino dejado por `o_enemyS_path`. | — | — |
 
 ---
 
-## 11. El jefe final (`o_enemy_boss`)
+## 10. Jefe final (`o_enemy_boss`)
 
-El jefe es el encuentro culminante de cada sala y adapta su comportamiento según la sala en la que se instancie.
+### Stats por sala
 
-### Estadísticas
-
-| Sala | HP máximo | Daño por contacto |
+| Sala | HP | Sprite |
 |---|---|---|
-| `RoomK` | 250 | 20 |
-| `RoomL` | 2500 (sprite diferente: `s_final_boss_1`) | 20 |
-| `RoomS` | 5000 (sprite diferente: 's_final_boss_2') | 20 |
+| `RoomK` | 1 000 | `s_final_boss` |
+| `RoomL` | 2 500 | `s_final_boss_1` |
+| `RoomS` | 3 500 | `s_final_boss_2` |
 
-### Fases de movimiento
+### Mecánica de entrada
 
-1. **`enter`:** el jefe aparece fuera del borde derecho y avanza horizontalmente hacia `room_width - 600` a velocidad 1.5 px/step. No ataca durante esta fase.
-2. **`fight`:** una vez posicionado, oscila verticalmente entre los márgenes de la sala (y < 96 / y > room_height - 96) a velocidad 4 px/step, rebotando al llegar a los bordes.
+1. Aparece fuera de pantalla (derecha) al cumplirse `boss_time`.
+2. Estado `"enter"`: se desplaza hacia `target_x = room_width - 600` a `vSpeed = 1.5` px/step.
+3. Durante la entrada, hitbox desactivado (`mask_index = s_boss_no_hitbox`).
+4. Al llegar, pasa a estado `"fight"`, hitbox se reactiva, primer disparo tras 1 segundo.
 
-### Patrones de ataque por sala
+### Movimiento en combate
 
-#### En `RoomK`
-Disparos en abanico radial cada 2 segundos: 10 proyectiles teledirigidos (`o_enemy_shoot_hom`) separados 14° entre sí, centrados en la dirección al jugador. Velocidad 20 px/step, daño 25.
+Oscilación vertical continua a `hSpeed = 4` px/step entre `y = 96` y `y = room_height - 96`.
 
-#### En `RoomL`
-Alterna entre dos patrones en ciclo `shoot_phase` (0 → 1 → 0 → 1…):
-- **Fase 0 (homing):** igual que en RoomK: 10 proyectiles en abanico (12° de separación), velocidad 20, daño 25.
-- **Fase 1 (láser):** activa el sistema de láser integrado. Apunta durante 0.75 s (guía punteada) y dispara durante 2 s (5 de daño por tick cada 0.25 s). Espera 5 segundos antes del siguiente ataque.
+### Barra de vida
 
-#### En `RoomS`
-Rota entre tres fases en ciclo (0 → 1 → 2 → 0…):
-- **Fase 0 (homing simple):** un solo misil teledirigido, velocidad 12.
-- **Fase 1 (láser):** igual que en RoomL.
-- **Fase 2 (orbe):** lanza un `o_boss_orb` que viaja 300 px y explota con radio 120 px y 30 de daño.
+Dibujada en el borde derecho de la pantalla (32px ancho, vertical, se llena de abajo hacia arriba). Visible solo en estado `"fight"`.
 
-### Sistema de láser integrado
+### Recuperación de vida por muerte del jugador
 
-El jefe incorpora un sistema de láser propio (no depende de `o_enemy_laser`):
-- **Estado `aiming`** (45 steps): traza una guía punteada roja intermitente, actualizando la dirección al jugador en tiempo real.
-- **Estado `firing`** (120 steps): dibuja un rayo azul de 3000 px de largo. Cada 15 steps verifica con `collision_line` si impacta al jugador e inflige 5 de daño.
-
-### Invocación de esbirros (minions)
-
-Cada 8 segundos durante la fase de combate, el jefe invoca 2 enemigos de tipo rápido desde el borde derecho de la pantalla:
-- En `RoomK`: 2 instancias de `o_enemy_fast`.
-- En `RoomL`: 2 instancias de `o_enemyL_fast`.
-- En `RoomS`: no invoca minions durante el combate.
-
-### Sistema de recuperación (vampirismo)
-
-Cada vez que el jugador muere durante el combate, el jefe **recupera 100 de HP** (hasta el máximo). El jefe monitorea `o_player.deaths` y calcula la diferencia respecto al valor registrado en `last_deaths` para aplicar la curación correctamente incluso con múltiples muertes consecutivas.
-
-### Barra de salud
-
-Durante la fase `fight`, el jefe muestra una barra de vida vertical en el lado derecho de la pantalla (`room_width - 60`). Se dibuja con un fondo gris (vida perdida), un rectángulo rojo (vida actual que crece desde abajo) y un marco blanco. La altura de la barra llena es proporcional a `hp / hpMax`.
-
-### Al ser derrotado
-
-1. Se destruyen todos los `o_enemy_manager` activos.
-2. Se crea un portal permanente (`alarm[0] = -1`) en la posición del jefe:
-   - RoomK → portal a `RoomL`
-   - RoomL → portal a `RoomS`
-   - Otras salas → `o_player.alarm[11]` con 4 segundos de retraso para ir a `RoomVEnd`
-
----
-
-## 12. Sistemas gestores
-
-### `o_game_manager` — Gestor de nivel
-
-Objeto presente en `RoomK` y `RoomL`. Administra:
-- El **temporizador del jefe** (`game_timer` acumulado en steps, disparador a `boss_time = 60 * room_speed`).
-- La **penalización por muerte**: cada vez que el jugador muere, `boss_time` aumenta en `15 * room_speed` (15 segundos), retrasando la aparición del jefe.
-- La **eliminación de spawners** al momento de aparecer el jefe.
-- La restricción del arma Homing en `RoomK` al aparecer el jefe.
-- El texto en pantalla que muestra la cuenta regresiva `"Jefe en: Xs"` (visible solo cuando el jefe no ha aparecido aún).
-
-### `o_enemy_manager` — Spawner de enemigos
-
-Generador reutilizable configurable por instancia desde el código de creación de cada sala. Sus parámetros clave:
-
-| Variable | Valor por defecto | Descripción |
-|---|---|---|
-| `enemy_type` | `o_enemy_fast` | Tipo de enemigo a generar |
-| `spawn_types` | `[]` | Lista de tipos para selección aleatoria (si no está vacía) |
-| `spawn_x` | 1925 | Posición X base de aparición |
-| `spawn_x_jitter` | 120 | Variación aleatoria horizontal |
-| `spawn_check_time` | 60 steps | Intervalo base entre verificaciones |
-| `spawn_variance` | 45 steps | Variación aleatoria del intervalo |
-| `max_alive` | 1 | Máximo de enemigos simultáneos de este spawner |
-
-Al crear un enemigo, le asigna su propio `id` como `spawner_id`. Cuando el enemigo muere, notifica al spawner decrementando `alive_count`, permitiendo que el ciclo continúe.
-
-### `o_portal` — Portal de transición
-
-Al colisionar con el jugador, navega a la sala almacenada en `target_room`. Si el destino es `RoomL`, establece `global.weapon_override = "Slash"` para que el jugador empiece esa sala con el arma correcta. Por defecto el portal se destruye a los 5 segundos (`alarm[0] = 5 * room_speed`); el jefe lo establece como permanente (`alarm[0] = -1`).
-
----
-
-## 13. Interfaz de usuario (HUD)
-
-### Indicador de vida (corazones)
-
-Dibujado en la capa GUI del jugador (`Draw_64`). Muestra 6 corazones en la esquina superior izquierda. Cada corazón representa ~16.67 HP. Los estados posibles por corazón:
-- **Lleno** (`s_heart_full`): el segmento tiene HP completo.
-- **Medio** (`s_heart_half`): el segmento tiene HP parcial.
-- **Vacío** (`s_heart_empty`): el segmento está agotado.
-
-### Cuenta regresiva al jefe
-
-El `o_game_manager` dibuja en el centro superior de la GUI el texto `"Jefe en: Xs"` donde X son los segundos restantes. El texto desaparece cuando el jefe aparece.
-
-### Barra de vida del jefe
-
-Dibujada en el propio evento Draw del jefe, no en la GUI. Aparece únicamente durante la fase `fight`, en el margen derecho de la sala.
-
-### Menú principal
-
-Gestionado por `o_menu_controller`. Presenta los botones JUGAR y SALIR con detección de clic por coordenadas. JUGAR dirige al tutorial en la primera sesión; SALIR cierra el juego.
-
----
-
-## 14. Scripts globales
-
-### `c_player_take_damage(amount)`
-Función universal de daño al jugador. Efectos al recibir impacto:
-- Si `invuln_timer > 0`: el golpe se ignora completamente.
-- Resta `amount` a `hp`.
-- Activa `invuln_timer = invuln_duration` (60 steps de invulnerabilidad).
-- Si el arma era `"Homing"`, la degrada a `"Standard"`.
-- Reduce `powlvl` en 1, hasta un mínimo de 1.
-
-### `c_bomb_explode(_x, _y, _radius, _dmg)`
-Explosión radial que afecta a todas las instancias de `o_enemy_body` y `o_enemy_boss` en el radio especificado mediante `point_distance`. También aplica daño fijo de **15 al jugador** si está dentro del radio (daño amistoso).
-
-
-### `c_unlock_weapon(_name)`
-Agrega un arma al array `weapon_slots` del jugador. Antes de insertarla verifica que no exista ya en el array (usando un bucle de búsqueda), evitando duplicados.
-
----
-
-## 15. Interacciones entre sistemas
-
+Cada vez que el jugador muere mientras el boss está activo:
 ```
-o_game_manager
-    ↳ monitorea o_player.deaths → penaliza boss_time
-    ↳ al cumplir boss_time → destruye o_enemy_manager(s) → instancia o_enemy_boss
-    ↳ en RoomK: quita arma Homing al jugador si la tiene
-
-o_enemy_body (padre de todos los enemigos destructibles)
-    ↳ al destruirse → notifica a spawner_id (o_enemy_manager.alive_count--)
-    ↳ al destruirse → global.kills_since_last_portal++
-    ↳ al destruirse en RoomL → incrementa global.roomL_kills
-    ↳ si roomL_kills >= 5 → desbloquea "Hook" en weapon_slots del jugador
-    ↳ si era o_enemy_laser → desbloquea "Bomb" en weapon_slots del jugador
-
-o_enemy_boss
-    ↳ monitorea o_player.deaths → cura 100 HP por muerte del jugador
-    ↳ al destruirse → destruye todos los o_enemy_manager
-    ↳ al destruirse → crea o_portal con destino según la sala
-
-o_power_overdrive → cambia weapon a "Spread", overdrive_shots_left = 5
-    ↳ weapon == "Homing" → pending_weapon = "Homing"
-    ↳ al agotar cargas → weapon = pending_weapon (o "Standard" si vacío)
-
-o_power_homing → cambia weapon a "Homing"
-    ↳ si weapon == "Spread" → pending_weapon = "Homing" (no reemplaza, queda en cola)
-
-c_player_take_damage()
-    ↳ si weapon == "Homing" → weapon = "Standard"
-    ↳ powlvl = max(powlvl - 1, 1)
-
-o_portal (target_room == RoomL) → global.weapon_override = "Slash"
-    ↳ o_player Create → lee global.weapon_override si existe
-
-o_bomb (estado "stuck") → sigue al target; si target muere → o_bomb se destruye
-o_bomb (detonación) → c_bomb_explode() → daña enemigos + jugador en radio
+boss.hp = min(hp + 500 × muertes_nuevas, hpMax)
 ```
 
+### Fases de ataque
+
+#### `RoomK` — Fase única
+
+| Ataque | Descripción |
+|---|---|
+| **Spread homing** | 10 proyectiles (`o_enemy_shoot_hom`) en abanico de 14° apuntando al jugador. Cooldown: 2 segundos. |
+| **Invocación** | Cada 8 segundos: 2× `o_enemy_fast`. |
+
+#### `RoomL` — Alternancia 0 ↔ 1
+
+| Fase | Ataque | Cooldown |
+|---|---|---|
+| 0 | **Spread homing**: 10 proyectiles, 12° de separación. | 2s |
+| 1 | **Láser**: apuntado 0.75s (línea punteada roja parpadeante) → disparo 2s (rayo azul sólido, 5 dmg/0.25s). | 5s |
+| — | **Invocación**: cada 8 segundos: 2× `o_enemyL_fast`. | — |
+
+#### `RoomS` — Rotación 0 → 1 → 2 → 0
+
+| Fase | Ataque | Cooldown |
+|---|---|---|
+| 0 | **Spread homing**: 10 proyectiles, 12° de separación. | 2s |
+| 1 | **Láser**: igual que RoomL. | 5s |
+| 2 | **Orbe** (`o_boss_orb`): proyectil explosivo, radio 120, 30 dmg. | 3s |
+| — | **Invocación**: cada 8 segundos: 2× `o_enemyS_slow`. | — |
+
+### Visuals del láser
+
+- **Apuntando**: línea punteada roja, parpadeante (0.35/0.85 de alfa alternando cada 10 frames), largo 1600px.
+- **Disparando**: rayo azul sólido, grosor 6px, largo 3000px.
+
+### Al morir el boss
+
+1. Destruye todos los `o_enemy_manager` activos.
+2. Crea un `o_portal` permanente que lleva a la siguiente sala.
+3. En `RoomS`, el portal lleva a `RoomVEnd`.
+
 ---
 
-## 16. Estado del proyecto
+## 11. Sistema de portal y progresión
 
-- Sistema de movimiento con dash, límites de pantalla y soporte dual teclado/gamepad
-- Sistema de combate en RoomK (Standard, Homing, Spread/Overdrive)
-- Sistema de combate en RoomL (Slash, Hook, Bomb) con desbloqueo progresivo
-- Sistema de combate en RoomS con enemigos exclusivos y jefe de tres fases
-- Jefe final con patrones de ataque adaptativos por sala y sistema de vampirismo
-- Enemigos diferenciados por sala con comportamientos variados
-- Sistema de power-ups con lógica de cola para compatibilidad entre armas
-- HUD de corazones, cuenta regresiva del jefe y barra de vida del jefe
-- Sistema de spawners configurables por instancia
-- Portales de transición entre salas con desbloqueo por derrota del jefe
-- Soporte completo para gamepad Xbox One con detección automática
+`o_portal` es el nexo entre salas. Su `target_room` se configura al crearlo:
+
+| Portal creado en | Destino |
+|---|---|
+| `RoomK` (al matar boss) | `RoomL` |
+| `RoomL` (al matar boss) | `RoomS` |
+| `RoomS` (al matar boss) | `RoomVEnd` |
+
+- Los portales creados por el boss son **permanentes** (`alarm[0] = -1`).
+- `image_xscale = 2`, `image_yscale = 2`.
+- Al tocarlos, el jugador cambia de sala. El arma activa se transfiere vía `global.weapon_override`.
 
 ---
 
-*Proyecto desarrollado con GameMaker. Para abrir el proyecto, utilizar el archivo `Top Down Shooter.yyp` desde GameMaker IDE.*
+## 12. Managers y objetos de control
+
+### `o_game_manager`
+
+Objeto persistente que controla el **timer del boss** y la lógica global:
+
+| Variable | Valor | Descripción |
+|---|---|---|
+| `boss_time` | `60 × room_speed` | Tiempo hasta que aparece el boss (1 minuto) |
+| `death_penalty` | `15 × room_speed` | Segundos extra por muerte del jugador |
+| `global.pass` | 0 inicial | Partidas completadas |
+| `global.total_deaths` | 0 inicial | Muertes totales en la sesión |
+
+- Al cumplirse `boss_time`: destruye todos los spawners y crea `o_enemy_boss` en `room_width + 100, room_height / 2`.
+- En `RoomK`, si el jugador tenía Homing al aparecer el boss, se resetea a Standard.
+
+### `o_enemy_manager`
+
+Spawner configurable de enemigos. Parámetros clave:
+
+| Variable | Default | Descripción |
+|---|---|---|
+| `max_alive` | 1 | Cantidad máxima de enemigos simultáneos por spawner |
+| `spawn_check_time` | 60 frames | Intervalo base de spawn |
+| `spawn_variance` | ±45 frames | Variación aleatoria del intervalo |
+| `spawn_types[]` | vacío | Lista de tipos a elegir al azar |
+| `spawn_sides[]` | vacío | Lados válidos: `"left"`, `"top"`, `"right"` |
+| `spawn_x` | 1925 | Posición X base de spawn |
+| `spawn_x_jitter` | 120px | Variación horizontal del punto de spawn |
+
+Cada enemigo creado recibe: `spawner_id`, `spawn_side`, `origin_x/y`, `target_x/y`.
+
+### `o_menu_controller`
+
+- En `RoomIMenu`: cualquier input → `RoomJTutorial` + resetea `global.total_deaths`.
+- En `RoomVEnd`: detecta fin de canción (via `o_sound`) → cualquier input incrementa `global.pass` y vuelve al menú.
+
+### `o_tutorial_controller` / `o_tutorial_splatoon` / `o_tutorial_zelda`
+
+Controladores de la sala tutorial. Muestran instrucciones de diferentes estilos de juego.
+
+---
+
+## 13. Sistema de audio (`o_sound`)
+
+Objeto **persistente** (`persistent = true`). Detecta cambios de sala en cada Step y para/inicia la pista:
+
+| Sala | Pista | Loop |
+|---|---|---|
+| `RoomIMenu` / `RoomJTutorial` | `snd_menu_tutorial` | ✅ |
+| `RoomK` | `snd_roomK` | ✅ |
+| `RoomL` | `snd_roomL` | ✅ |
+| `RoomS` | `snd_roomS` | ✅ |
+| `RoomVEnd` | `snd_roomVEnd` | ❌ (fin de canción dispara transición) |
+
+Pistas alternativas disponibles: `snd_roomK_1`, `snd_roomL_1`, `snd_roomS_1`.
+
+---
+
+## 14. Rutas predefinidas (Paths)
+
+| Path | Uso |
+|---|---|
+| `path_kamikaze_1` | Trayectoria de enemigos kamikaze (variante 1) |
+| `path_kamikaze_2` | Trayectoria de enemigos kamikaze (variante 2) |
+| `path_kamikaze_3` | Trayectoria de enemigos kamikaze (variante 3) |
+| `path_pow_1` | Ruta de potenciadores (variante 1) |
+| `path_pow_2` | Ruta de potenciadores (variante 2) |
+| `p_kirby_cayendo` | Animación de Kirby cayendo (pantalla de fin) |
+
+---
+
+## 15. Scripts reutilizables
+
+| Script | Firma | Descripción |
+|---|---|---|
+| `c_weapon_standard` | `(powlvl)` | Crea `o_standard_shot` según nivel (1/2/3). |
+| `c_weapon_spread` | `(powlvl)` | Crea 10 proyectiles en abanico de 120° (-60° a +60°). |
+| `c_weapon_homing` | `(powlvl)` | Crea `o_homing_shot` teledirigido según nivel. |
+| `c_weapon_slash` | `()` | Activa animación de espada y crea hitbox de slash. |
+| `c_weapon_hook` | `()` | Crea el gancho (`o_hook_shot`) orientado al facing. |
+| `c_weapon_bomb` | `()` | Lanza bomba (1er toque) o la detona (2do toque). |
+| `c_weapon_bucket` | `(x, y, facing)` | Abanico de 10 balas escaladas por carga de parry. Resetea la barra. |
+| `c_bomb_explode` | `(x, y, radius, dmg)` | Daño de área a `o_enemy_body`, `o_enemy_boss` y al jugador. |
+| `c_player_take_damage` | `(amount)` | Aplica daño respetando iframes. Baja `powlvl` y resetea Homing al recibir daño. |
+| `c_player_register_parry` | `()` | Suma carga de parry (+20). Activa `charged_shot_ready` al llegar al máximo. Da 10 iframes extra. |
+| `c_unlock_weapon` | `(name)` | Agrega un arma al `weapon_slots[]` del jugador si no existe ya. |
+| `c_any_input_pressed` | `()` | Devuelve `true` si se presionó cualquier tecla o botón de gamepad. |
+
+---
+
+## 16. Sprites
+
+### Jugador
+
+| Sprite | Uso |
+|---|---|
+| `s_player` | Base / genérico |
+| `s_player_1` | Jugador en `RoomK` |
+| `s_player_2` | Jugador en `RoomL` |
+| `s_player_3` | Jugador en `RoomS` |
+| `s_att_sword` | Animación de ataque con espada |
+| `s_att_bucket` | Animación de ataque con balde |
+
+### Enemigos
+
+| Sprite | Uso |
+|---|---|
+| `s_enemy_1/2/3` | Enemigos genéricos variantes 1-3 |
+| `s_enemy_slow` | Enemigo lento |
+| `s_enemy_path` | Enemigo tipo path (`RoomS`) |
+| `s_enemy_spread` | Enemigo spread (`RoomS`) |
+| `sL_enemy_1/2/3` | Enemigos para sala L |
+| `s_final_boss` | Boss en `RoomK` |
+| `s_final_boss_1` | Boss en `RoomL` |
+| `s_final_boss_2` | Boss en `RoomS` |
+| `s_boss_no_hitbox` | Máscara vacía del boss durante la entrada |
+
+### Proyectiles y UI
+
+| Sprite | Uso |
+|---|---|
+| `s_standard_shot/_2/_3` | Proyectil estándar niveles 1-3 |
+| `s_standard_att` | Hitbox de slash |
+| `s_paint_shot` | Proyectil de pintura (RoomS) |
+| `s_test_shoot` | Proyectil de prueba |
+| `s_heart_full/_half/_empty` | Corazones de la UI de vida |
+| `s_power_homing` | Ícono power-up Homing |
+| `s_power_plus` | Ícono power-up Plus |
+| `s_power_change` | Ícono de cambio de arma |
+| `s_indicacion` | Indicación en pantalla |
+
+### Fondos y menú
+
+| Sprite | Uso |
+|---|---|
+| `s_fondo_menu` | Fondo del menú principal |
+| `s_titulo` | Logo/título del juego |
+| `backgroundKirby1` | Fondo nivel Kirby |
+| `cielo` | Capa de cielo (parallax) |
+| `nubesCerca/nubesLejos` | Nubes en dos planos de profundidad |
+| `arbolesSecundarios` | Árboles de fondo |
+| `pinosPrincipales_cesped_rocas` | Elementos de primer plano |
+| `monta_a36` | Montañas de fondo |
+| `s_florMaravilla` | Flores decorativas |
+| `s_tutorial_principal` | Imagen principal del tutorial |
+| `s_tutorial_splatoon` | Sección tutorial estilo Splatoon |
+| `s_tutorial_zelda_1` | Sección tutorial estilo Zelda |
+| `s_ending_title` | Título de la pantalla final |
+| `s_kirby_ending_umbrella` | Kirby con paraguas (pantalla final) |
+| `s_kirbySorpresa` | Kirby sorprendido |
+| `fin` | Imagen de fin |
+
+---
+
+## 17. Controles
+
+| Acción | Teclado | Gamepad (Xbox One) |
+|---|---|---|
+| Mover | `W` `A` `S` `D` | Left Stick |
+| Atacar / Disparar | `J` | `B` (gp_face2) |
+| Dash | `I` | `RB` (gp_shoulderr) |
+| Cambiar arma (RoomL) | `K` | D-Pad Derecho (gp_padr) |
+| Parry / Absorber (RoomS) | `O` | `RT` (gp_shoulderrb > 0.15) |
+| Acción especial | — | `LT` (gp_shoulderlb > 0.15) |
+| Acción extra | — | D-Pad Abajo (gp_padd) |
+
+> El gamepad se detecta automáticamente al inicio (comprueba slots 0–3). Dead zone del stick: **0.1**.
+
+---
+
+## 18. Variables globales relevantes
+
+| Variable | Descripción |
+|---|---|
+| `global.total_deaths` | Total de muertes acumuladas en la sesión |
+| `global.pass` | Número de veces que se completó el juego |
+| `global.roomL_kills` | Kills en `RoomL` (umbral 5 para desbloquear el Hook) |
+| `global.kills_since_last_portal` | Kills desde el último portal |
+| `global.weapon_override` | Arma con la que se inicia la sala siguiente |
+
+---
+
+*Proyecto en desarrollo activo — GameMaker (GML)*
