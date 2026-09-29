@@ -63,7 +63,7 @@ pending_weapon = "";
 
 // Gamepad (Xbox One) --------------------------
 pad_num = -1;
-pad_dead_zone = 0.25; // Dead zone para el stick analogico
+pad_dead_zone = 0.1; // Dead zone para el stick analogico
 
 // Buscar el primer gamepad conectado
 for (var _i = 0; _i < 4; _i++)

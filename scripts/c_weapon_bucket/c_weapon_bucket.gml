@@ -9,7 +9,7 @@ function c_weapon_bucket(_x, _y, _mirando_derecha)
     var _apertura = 35;
     var _velocidad_bala = 12;
 
-    // cuánto se eleva el disparo (grados hacia arriba). Subilo/bajalo a gusto.
+    // cuánto se eleva el disparo
     var _elevacion = 18;
 
     // chequeo correcto de hacia dónde mira (facing llega como 1 o -1)
@@ -21,7 +21,7 @@ function c_weapon_bucket(_x, _y, _mirando_derecha)
     // Escala segun la carga del parry
     var _charge_ratio = parry_charge / parry_charge_max;
     var _size_scale = 1 + _charge_ratio * 1.5;
-    var _dmg_base   = 1000;
+    var _dmg_base   = 10;
     var _dmg_final  = _dmg_base * (1 + _charge_ratio);
 
     for (var i = 0; i < _cantidad_balas; i++) {

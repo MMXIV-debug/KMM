@@ -1,5 +1,4 @@
-
-if (keyboard_check_pressed(vk_anykey))
+if (c_any_input_pressed())
 {
-	room_goto(RoomK);
+    room_goto(RoomK);
 }

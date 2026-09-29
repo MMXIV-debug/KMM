@@ -10,8 +10,8 @@
   "name":"o_enemy_manager",
   "overriddenProperties":[],
   "parent":{
-    "name":"Extras",
-    "path":"folders/Objects/Extras.yy",
+    "name":"Managers",
+    "path":"folders/Objects/Extras/Managers.yy",
   },
   "parentObjectId":null,
   "persistent":false,

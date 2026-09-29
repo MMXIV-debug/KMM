@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"c_any_input_pressed",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"c_any_input_pressed",
+  "parent":{
+    "name":"Control",
+    "path":"folders/Functions/Control.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

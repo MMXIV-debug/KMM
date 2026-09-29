@@ -1,5 +1,5 @@
 // Stats ---------------------------
-hpMax = 250;
+hpMax = 1000;
 
 if (room == RoomL)
 {
@@ -38,19 +38,22 @@ shoot_phase = 0;
 summon_timer  = 0;
 summon_cd     = 8 * room_speed; // cada 8 segundos
 
-// Referencia al laser adherido (RoomL y RoomS)
-laser_active        = false;
-laser_state         = "aiming";
-laser_timer         = 0;
-laser_direction     = 0;
-laser_aim_time      = 45;    // 0.75s de aviso
-laser_duration      = 120;   // 2s de rayo activo
+// Sin hitbox hasta que llegue a "fight"
+mask_index = s_boss_no_hitbox;
+
+// Referencia al laser
+laser_active = false;
+laser_state  = "aiming";
+laser_timer = 0;
+laser_direction = 0;
+laser_aim_time = 45;    // 0.75s de aviso
+laser_duration = 120;   // 2s de rayo activo
 laser_tick_interval = 15;    // daño cada 0.25s
-laser_tick_timer    = 0;
-laser_dmg_per_tick  = 5;
-laser_beam_length   = 3000;
-laser_aim_length    = 1600;
+laser_tick_timer = 0;
+laser_dmg_per_tick = 5;
+laser_beam_length = 3000;
+laser_aim_length = 1600;
 
 // Extras
 last_deaths = instance_exists(o_player) ? o_player.deaths : 0;
-heal_on_kill = 100;
+heal_on_kill = 500;

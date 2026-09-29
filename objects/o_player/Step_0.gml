@@ -4,6 +4,7 @@ if (!is_dead && hp <= 0)
 {
     is_dead = true;
 	deaths += 1;
+	global.total_deaths += 1;
 	//instance_destroy(x,y, "Instances", o_death);
 	y-=2000;
 	alarm[1] = respawnTime;
@@ -21,9 +22,7 @@ if (invuln_timer > 0)
     invuln_timer--;
 }
 
-// ---------------------------------------------------------------
 // HELPERS: lectura unificada teclado + gamepad Xbox One
-// ---------------------------------------------------------------
 
 var _pad = pad_num;
 var _pad_connected = (_pad >= 0 && gamepad_is_connected(_pad));
@@ -38,19 +37,19 @@ if (_pad_connected)
 }
 
 // Funcion auxiliar: boton gamepad presionado (held)
-// B          = gp_face2
-// RB         = gp_shoulderr
-// LT         = gp_shoulderlb  (eje, >0.15 = presionado)
-// RT         = gp_shoulderrb  (eje, >0.15 = presionado)
+// B = gp_face2
+// RB = gp_shoulderr
+// LT = gp_shoulderlb  (eje, >0.15 = presionado)
+// RT  = gp_shoulderrb  (eje, >0.15 = presionado)
 // Right Arrow D-Pad = gp_padr
 // Down  Arrow D-Pad = gp_padd
 
-var _btn_attack_pad    = _pad_connected && gamepad_button_check_pressed(_pad, gp_face2);
-var _btn_dash_pad      = _pad_connected && gamepad_button_check_pressed(_pad, gp_shoulderr);
-var _btn_weapon_pad    = _pad_connected && gamepad_button_check_pressed(_pad, gp_padr);
-var _btn_final_pad     = _pad_connected && (gamepad_axis_value(_pad, gp_shoulderlb) > 0.15);
-var _btn_parry_pad     = _pad_connected && (gamepad_axis_value(_pad, gp_shoulderrb) > 0.15);
-var _btn_extra_pad     = _pad_connected && gamepad_button_check_pressed(_pad, gp_padd);
+var _btn_attack_pad = _pad_connected && gamepad_button_check_pressed(_pad, gp_face2);
+var _btn_dash_pad = _pad_connected && gamepad_button_check_pressed(_pad, gp_shoulderr);
+var _btn_weapon_pad = _pad_connected && gamepad_button_check_pressed(_pad, gp_padr);
+var _btn_final_pad = _pad_connected && (gamepad_axis_value(_pad, gp_shoulderlb) > 0.15);
+var _btn_parry_pad = _pad_connected && (gamepad_axis_value(_pad, gp_shoulderrb) > 0.15);
+var _btn_extra_pad = _pad_connected && gamepad_button_check_pressed(_pad, gp_padd);
 
 // Para LT/RT guardamos estado anterior en variables persistentes para simular "pressed"
 // (Los triggers son ejes continuos, no botones digitales)

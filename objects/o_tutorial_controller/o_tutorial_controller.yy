@@ -9,8 +9,8 @@
   "name":"o_tutorial_controller",
   "overriddenProperties":[],
   "parent":{
-    "name":"Extras",
-    "path":"folders/Objects/Extras.yy",
+    "name":"MenuTutorial",
+    "path":"folders/Objects/Extras/MenuTutorial.yy",
   },
   "parentObjectId":null,
   "persistent":false,

@@ -10,5 +10,9 @@ if (!variable_global_exists("pass"))
 {
     global.pass = 0;
 }
+if (!variable_global_exists("total_deaths"))
+{
+    global.total_deaths = 0;
+}
 
 spawn_margin = 64;
