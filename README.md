@@ -1,4 +1,4 @@
-﻿# 🎮 Top Down Shooter
+﻿Kirby Rift Riders
 
 > Proyecto de videojuego 2D top-down desarrollado en **GameMaker (GML)**. Presenta un jugador que atraviesa tres niveles de dificultad creciente, cada uno con su propio conjunto de armas, enemigos y un jefe final que escala en HP y ataques por sala.
 
@@ -406,11 +406,11 @@ Objeto **persistente** (`persistent = true`). Detecta cambios de sala en cada St
 
 | Sala | Pista | Loop |
 |---|---|---|
-| `RoomIMenu` / `RoomJTutorial` | `snd_menu_tutorial` | ✅ |
-| `RoomK` | `snd_roomK` | ✅ |
-| `RoomL` | `snd_roomL` | ✅ |
-| `RoomS` | `snd_roomS` | ✅ |
-| `RoomVEnd` | `snd_roomVEnd` | ❌ (fin de canción dispara transición) |
+| `RoomIMenu` / `RoomJTutorial` | `snd_menu_tutorial` |
+| `RoomK` | `snd_roomK` |
+| `RoomL` | `snd_roomL` |
+| `RoomS` | `snd_roomS` |
+| `RoomVEnd` | `snd_roomVEnd` | (fin de canción dispara transición) |
 
 Pistas alternativas disponibles: `snd_roomK_1`, `snd_roomL_1`, `snd_roomS_1`.
 
