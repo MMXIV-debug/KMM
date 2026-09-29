@@ -12,7 +12,8 @@ if (state == "flying")
             var d = point_distance(x, y, o_player.x, o_player.y);
             if (d <= explode_radius)
             {
-                with (o_player) { c_player_take_damage(dmg); }
+				var damage = dmg;
+                with (o_player) { c_player_take_damage(damage); }
             }
         }
 
